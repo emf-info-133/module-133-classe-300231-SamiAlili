@@ -138,7 +138,7 @@ public class CtrlRest1 {
             @RequestParam(defaultValue = "-1") List<Integer> ids) {
 
         List<UtilisateurDTO> utilisateurs = null;
-        if (ids.size() == 1 && ids.get(0) == -1) {
+        if (ids.size() <= 1 || ids.get(0) == -1) {
             utilisateurs = utilisateurService.getUtilisateurs();
         } else {
             utilisateurs = utilisateurService.getUtilisateurs(ids.stream().mapToInt(i -> i).toArray());
