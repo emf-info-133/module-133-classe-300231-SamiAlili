@@ -106,6 +106,10 @@ public class CtrlRest1 {
 
         UtilisateurDTO u = utilisateurService.login(nom_utilisateur, mdp);
 
+        if (u == null) {
+            return ResponseEntity.badRequest().body("Erreur lors de la connexion");
+        }
+
         Map<String, Object> rep = new HashMap<>();
         rep.put("utilisateur", u);
         rep.put("admin", utilisateurService.isAdmin(u.getId()));

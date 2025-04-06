@@ -91,7 +91,11 @@ public class UtilisateurService {
         utilisateur.setMdp(passwordEncoder.encode(mdp));
         utilisateur.setAdmin(false);
 
-        utilisateurRepository.save(utilisateur);
+        try {
+            utilisateurRepository.save(utilisateur);
+        } catch (Exception e) {
+            return false;
+        }
 
         return true;
     }

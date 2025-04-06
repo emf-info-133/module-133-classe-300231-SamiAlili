@@ -27,7 +27,7 @@ public class CompetitionService {
         List<Competition> competitions = (List<Competition>) competitionRepository.findAll();
 
         if (competitions == null || competitions.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<CompetitionDTO> competitionsDTO = new ArrayList<>();
