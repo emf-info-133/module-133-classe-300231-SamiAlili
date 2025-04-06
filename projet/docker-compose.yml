@@ -32,7 +32,7 @@ services:
       context: ./serviceRest2
       dockerfile: Dockerfile
     ports:
-      - "8082:8082"
+      - "8082:8080"
     environment:
       DATABASE_URL: jdbc:mysql://db-rest2:3306/133-rest2-db
     depends_on:
