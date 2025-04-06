@@ -1,11 +1,22 @@
 package com.gw.ctrl;
 
-import com.gw.manager.UserManager;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.gw.manager.UserManager;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/gw")
@@ -24,19 +35,32 @@ public class Douanier {
     }
 
     @PostMapping("/ouvrirCompetition")
-    public ResponseEntity<String> ouvrirCompetition(@RequestParam String categorie) {
+    public ResponseEntity<String> ouvrirCompetition(HttpSession session, @RequestParam String categorie) {
+        if (session.getAttribute("user_type") == "admin") {
+            return ResponseEntity.badRequest().body("Vous n'avez pas le droit d'ouvrir une compétition");
+        }
+
         return userManager.ouvrirCompetition(categorie);
     }
 
     @DeleteMapping("/supprimerCompetition/{id}")
-    public ResponseEntity<String> supprimerCompetition(@PathVariable int id) {
+    public ResponseEntity<String> supprimerCompetition(HttpSession session, @PathVariable int id) {
+        if (session.getAttribute("user_type") == "admin") {
+            return ResponseEntity.badRequest().body("Vous n'avez pas le droit d'ouvrir une compétition");
+        }
+
         return userManager.supprimerCompetition(id);
     }
 
     @PutMapping("/modifierCompetition/{id}")
-    public ResponseEntity<String> modifierCompetition(@PathVariable int id,
+    public ResponseEntity<String> modifierCompetition(HttpSession session, @PathVariable int id,
             @RequestParam String etat,
             @RequestParam String categorie) {
+
+        if (session.getAttribute("user_type") == "admin") {
+            return ResponseEntity.badRequest().body("Vous n'avez pas le droit d'ouvrir une compétition");
+        }
+
         return userManager.modifierCompetition(id, etat, categorie);
     }
 
@@ -47,9 +71,23 @@ public class Douanier {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String nomUtilisateur,
+    public ResponseEntity<?> login(HttpSession session, @RequestParam(name = "nom_utilisateur") String nomUtilisateur,
             @RequestParam String mdp) {
-        return userManager.login(nomUtilisateur, mdp);
+        ResponseEntity<Map> response = userManager.login(nomUtilisateur, mdp);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+
+            Map reponseDTO = response.getBody();
+
+            boolean admin = (boolean) reponseDTO.get("admin");
+
+            session.setAttribute("user_type", admin ? "admin" : "user");
+
+            Map utilisateur = (Map) reponseDTO.get("utilisateur");
+            session.setAttribute("user_id", utilisateur.get("id"));
+        }
+
+        return response;
     }
 
     @PostMapping("/signIn")

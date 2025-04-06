@@ -98,19 +98,23 @@ public class CtrlRest1 {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> postLogin(@RequestParam String nom_utilisateur,
+    public ResponseEntity<Map<String, Object>> postLogin(@RequestParam String nom_utilisateur,
             @RequestParam String mdp) {
+
+        Map<String, Object> rep = new HashMap<>();
+
         if (nom_utilisateur == null || mdp == null || nom_utilisateur.isEmpty() || mdp.isEmpty()) {
-            return ResponseEntity.badRequest().body("les paramèters sont manquants");
+            rep.put("erreur", "les paramèters sont manquants");
+            return ResponseEntity.badRequest().body(rep);
         }
 
         UtilisateurDTO u = utilisateurService.login(nom_utilisateur, mdp);
 
         if (u == null) {
-            return ResponseEntity.badRequest().body("Erreur lors de la connexion");
+            rep.put("erreur", "Erreur lors de la connexion");
+            return ResponseEntity.badRequest().body(rep);
         }
 
-        Map<String, Object> rep = new HashMap<>();
         rep.put("utilisateur", u);
         rep.put("admin", utilisateurService.isAdmin(u.getId()));
 
@@ -135,7 +139,7 @@ public class CtrlRest1 {
 
     @GetMapping("/getUtilisateurs")
     public ResponseEntity<List<UtilisateurDTO>> getUtilisateurs(
-            @RequestParam(defaultValue = "-1") List<Integer> ids) {
+            @RequestParam(required = false) List<Integer> ids) {
 
         List<UtilisateurDTO> utilisateurs = null;
         if (ids.size() <= 1 || ids.get(0) == -1) {

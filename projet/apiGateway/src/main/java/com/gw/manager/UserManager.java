@@ -4,9 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class UserManager {
@@ -55,13 +59,13 @@ public class UserManager {
         return restTemplate.getForEntity(url, null, params);
     }
 
-    public ResponseEntity<?> login(String nomUtilisateur, String mdp) {
+    public ResponseEntity<Map> login(String nomUtilisateur, String mdp) {
         String url = USER_SERVICE_URL + "login";
-        Map<String, String> params = new HashMap<>();
-        params.put("nom_utilisateur", nomUtilisateur);
-        params.put("mdp", mdp);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("nom_utilisateur", nomUtilisateur);
+        params.add("mdp", mdp);
 
-        return restTemplate.postForEntity(url, params, null);
+        return restTemplate.postForEntity(url, params, Map.class);
     }
 
     public ResponseEntity<String> signIn(String nomUtilisateur, String mdp) {
@@ -70,7 +74,11 @@ public class UserManager {
         params.put("nom_utilisateur", nomUtilisateur);
         params.put("mdp", mdp);
 
-        return restTemplate.postForEntity(url, params, null);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(params, headers);
+
+        return restTemplate.postForEntity(url, request, null);
     }
 
     public ResponseEntity<?> getUtilisateurs(List<Integer> ids) {
