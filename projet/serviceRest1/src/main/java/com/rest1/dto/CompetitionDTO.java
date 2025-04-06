@@ -4,14 +4,24 @@ import java.util.List;
 
 public class CompetitionDTO {
 
+    private int id;
     private String etat;
     private String categorie;
     private List<String> participants;
 
-    public CompetitionDTO(String etat, String categorie, List<String> participants) {
+    public CompetitionDTO(int id, String etat, String categorie, List<String> participants) {
+        this.id = id;
         this.etat = etat;
         this.categorie = categorie;
         this.participants = participants;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEtat() {

@@ -2,6 +2,8 @@ package com.rest1.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,10 +17,12 @@ public class Competition {
     @Column(name = "pk_competition", length = 50)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @Enumerated(EnumType.STRING)
     @Column(name = "etat", length = 45)
-    private String etat;
+    private Etat etat;
+    @Enumerated(EnumType.STRING)
     @Column(name = "categorie", length = 45)
-    private String categorie;
+    private Categorie categorie;
 
     public Integer getId() {
         return id;
@@ -29,18 +33,18 @@ public class Competition {
     }
 
     public String getEtat() {
-        return etat;
+        return etat.toString().toLowerCase();
     }
 
-    public void setEtat(String etat) {
+    public void setEtat(Etat etat) {
         this.etat = etat;
     }
 
     public String getCategorie() {
-        return categorie;
+        return categorie.toString().toLowerCase();
     }
 
-    public void setCategorie(String categorie) {
+    public void setCategorie(Categorie categorie) {
         this.categorie = categorie;
     }
 

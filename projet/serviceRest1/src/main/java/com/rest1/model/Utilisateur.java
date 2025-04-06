@@ -12,11 +12,11 @@ import jakarta.persistence.Table;
 public class Utilisateur {
 
     @Id
-    @Column(name = "pk_utilisateur", length = 50)
+    @Column(name = "pk_utilisateur")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @Column(name = "nom_utilisateur", length = 50)
-    private String nomAdmin;
+    @Column(name = "nom_utilisateur", length = 50, unique = true)
+    private String nomUtilisateur;
     @Column(name = "mdp", length = 100)
     private String mdp;
     @Column(name = "admin")
@@ -30,12 +30,12 @@ public class Utilisateur {
         this.id = id;
     }
 
-    public String getName() {
-        return nomAdmin;
+    public String getNomUtilisateur() {
+        return nomUtilisateur;
     }
 
-    public void setName(String name) {
-        this.nomAdmin = name;
+    public void setNomUtilisateur(String name) {
+        this.nomUtilisateur = name;
     }
 
     public String getMdp() {
@@ -46,8 +46,8 @@ public class Utilisateur {
         this.mdp = mdp;
     }
 
-    public String getAdmin() {
-        return mdp;
+    public boolean isAdmin() {
+        return admin;
     }
 
     public void setAdmin(boolean admin) {

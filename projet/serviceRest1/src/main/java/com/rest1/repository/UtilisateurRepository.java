@@ -6,4 +6,5 @@ import com.rest1.model.Utilisateur;
 
 public interface UtilisateurRepository extends CrudRepository<Utilisateur, Integer> {
 
+    Utilisateur findByNomUtilisateur(String nomUtilisateur);
 }
