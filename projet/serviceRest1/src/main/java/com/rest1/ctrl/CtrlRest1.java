@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.rest1.dto.CompetitionDTO;
 import com.rest1.dto.UtilisateurDTO;
 import com.rest1.service.CompetitionService;
 import com.rest1.service.UtilisateurService;
@@ -44,57 +43,72 @@ public class CtrlRest1 {
     }
 
     @PostMapping("/ouvrirCompetition")
-    public ResponseEntity<String> postCompetition(@RequestParam String categorie) {
+    public ResponseEntity<Map<String, String>> postCompetition(@RequestParam String categorie) {
+        Map<String, String> rep = new HashMap<>();
 
         if (categorie == null || categorie.isEmpty()) {
-            return ResponseEntity.badRequest().body("les paramèters sont manquants");
+            rep.put("erreur", "les paramèters sont manquants");
+            return ResponseEntity.badRequest().body(rep);
         }
 
         boolean ajout = competitionService.ajouterCompetition(categorie);
 
         if (!ajout) {
-            return ResponseEntity.badRequest().body("Erreur lors de l'ajout");
+            rep.put("erreur", "Erreur lors de l'ajout");
+            return ResponseEntity.badRequest().body(rep);
         }
 
-        return ResponseEntity.ok("OK !");
+        rep.put("message", "Ouverture de la compétition réussie");
+
+        return ResponseEntity.ok(rep);
     }
 
     @DeleteMapping("/supprimerCompetition/{id}")
-    public ResponseEntity<String> deleteCompetition(@PathVariable int id) {
+    public ResponseEntity<Map<String, String>> deleteCompetition(@PathVariable int id) {
+        Map<String, String> rep = new HashMap<>();
 
         boolean sup = competitionService.supprimerCompetition(id);
 
         if (!sup) {
-            return ResponseEntity.badRequest().body("Erreur lors de la suppression");
+            rep.put("erreur", "Erreur lors de la suppression");
+            return ResponseEntity.badRequest().body(rep);
         }
 
-        return ResponseEntity.ok("OK!");
+        rep.put("message", "Suppression de la compétition réussie");
+
+        return ResponseEntity.ok(rep);
     }
 
     @PutMapping("modifierCompetition/{id}")
-    public ResponseEntity<String> putMethodName(@PathVariable int id, @RequestParam String etat,
+    public ResponseEntity<Map<String, String>> putMethodName(@PathVariable int id, @RequestParam String etat,
             @RequestParam String categorie) {
+
+        Map<String, String> rep = new HashMap<>();
 
         boolean mod = competitionService.modifierCompetition(id, etat, categorie);
 
         if (!mod) {
-            return ResponseEntity.badRequest().body("Erreur lors de la modification");
+            rep.put("erreur", "Erreur lors de la modification");
+            return ResponseEntity.badRequest().body(rep);
         }
 
-        return ResponseEntity.ok("OK !");
+        return ResponseEntity.ok(rep);
     }
 
     @GetMapping("getCompetitions")
-    public ResponseEntity<?> getCompetitions(
-            @RequestParam(name = "idCompetition", defaultValue = "-1") int idCompetition) {
+    public ResponseEntity<Map<String, Object>> getCompetitions(
+            @RequestParam(required = false) Integer idCompetition) {
 
-        if (idCompetition == -1) {
-            return ResponseEntity.ok(competitionService.getCompetitions());
+        Map<String, Object> rep = new HashMap<>();
+
+        if (idCompetition == null) {
+            rep.put("data", competitionService.getCompetitions());
+            return ResponseEntity.ok(rep);
         }
 
-        CompetitionDTO c = competitionService.getCompetitionAvecId(idCompetition);
+        rep.put("data", competitionService.getCompetitionAvecId(idCompetition.intValue()));
 
-        return ResponseEntity.ok(c);
+        return ResponseEntity.ok(rep);
     }
 
     @PostMapping("/login")
@@ -122,33 +136,47 @@ public class CtrlRest1 {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<String> postMethodName(@RequestParam String nom_utilisateur, @RequestParam String mdp) {
+    public ResponseEntity<Map<String, String>> postMethodName(@RequestParam String nom_utilisateur,
+            @RequestParam String mdp) {
+
+        Map<String, String> rep = new HashMap<>();
 
         if (nom_utilisateur == null || mdp == null || nom_utilisateur.isEmpty() || mdp.isEmpty()) {
-            return ResponseEntity.badRequest().body("les paramèters sont manquants");
+            rep.put("erreur", "les paramèters sont manquants");
+            return ResponseEntity.badRequest().body(rep);
         }
 
         boolean res = utilisateurService.signIn(nom_utilisateur, mdp);
 
         if (!res) {
-            return ResponseEntity.badRequest().body("Erreur lors de l'inscription");
+            rep.put("erreur", "Erreur lors de l'inscription");
+            return ResponseEntity.badRequest().body(rep);
         }
 
-        return ResponseEntity.ok("OK!");
+        rep.put("message", "Inscription réussie");
+        return ResponseEntity.ok(rep);
     }
 
     @GetMapping("/getUtilisateurs")
-    public ResponseEntity<List<UtilisateurDTO>> getUtilisateurs(
+    public ResponseEntity<Map<String, Object>> getUtilisateurs(
             @RequestParam(required = false) List<Integer> ids) {
 
+        Map<String, Object> rep = new HashMap<>();
+
         List<UtilisateurDTO> utilisateurs = null;
-        if (ids.size() <= 1 || ids.get(0) == -1) {
+        if (ids == null) {
             utilisateurs = utilisateurService.getUtilisateurs();
         } else {
             utilisateurs = utilisateurService.getUtilisateurs(ids.stream().mapToInt(i -> i).toArray());
         }
 
-        return ResponseEntity.ok(utilisateurs);
+        if (utilisateurs.size() == 1) {
+            rep.put("data", utilisateurs.get(0));
+        } else {
+            rep.put("data", utilisateurs);
+        }
+
+        return ResponseEntity.ok(rep);
     }
 
 }
