@@ -21,6 +21,7 @@ services:
       - "8081:8081"
     environment:
       DATABASE_URL: jdbc:mysql://db-rest1:3306/133-rest1-db
+      REST1_SERVICE_URL: http://rest2:8082/rest2/
     depends_on:
       - db-rest1
     networks:
