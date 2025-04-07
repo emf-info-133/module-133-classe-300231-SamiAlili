@@ -9,5 +9,5 @@ import com.rest2.model.VoteId;
 
 public interface VoteRepository extends CrudRepository<Vote, VoteId>{
     
-    public List<Vote> findById_PfkRecoit(int idReceveur);
+    List<Vote> findById_PfkRecoitAndId_PfkCompetition(int idReceveur, int idCompetition);
 }

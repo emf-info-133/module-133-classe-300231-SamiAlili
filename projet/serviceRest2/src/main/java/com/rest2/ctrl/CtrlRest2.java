@@ -36,8 +36,8 @@ public class CtrlRest2 {
     }
 
     @GetMapping("/getVotes")//get tous les votes du receveur du vote
-    public ResponseEntity<List<Vote>> getVotes(@RequestParam int idReceveur) {
-        return ResponseEntity.ok(voteService.getVotes(idReceveur));
+    public ResponseEntity<List<Vote>> getVotes(@RequestParam int idReceveur, @RequestParam int idCompetition) {
+        return ResponseEntity.ok(voteService.getVotes(idReceveur, idCompetition));
     }
     
     @PostMapping("/voter") 

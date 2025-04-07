@@ -1,6 +1,5 @@
 package com.rest2.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.rest2.model.Vote;
@@ -31,7 +30,7 @@ public class VoteService {
         }
     }
 
-    public List<Vote> getVotes(int idReceveur) {
-        return voteRepository.findById_PfkRecoit(idReceveur);
+    public List<Vote> getVotes(int idReceveur, int idCompetition) {
+        return voteRepository.findById_PfkRecoitAndId_PfkCompetition(idReceveur, idCompetition);
     }
 }
