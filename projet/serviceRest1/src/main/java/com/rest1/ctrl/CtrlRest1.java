@@ -106,7 +106,8 @@ public class CtrlRest1 {
 
     @GetMapping("getCompetitions")
     public ResponseEntity<Map<String, Object>> getCompetitions(
-            @RequestParam(required = false) Integer idCompetition) {
+            @RequestParam(required = false) Integer idCompetition,
+            @RequestParam(required = false, defaultValue = "false") boolean participants) {
 
         if (idCompetition == null) {
             List<CompetitionDTO> comps = competitionService.getCompetitions();
@@ -116,7 +117,9 @@ public class CtrlRest1 {
                         .body(Map.of("erreur", "Erreur lors de la récupération de la compétition"));
             }
 
-            comps.forEach((comp) -> addParticipantsCompetition(comp));
+            if (participants) {
+                comps.forEach((comp) -> addParticipantsCompetition(comp));
+            }
             return ResponseEntity.ok(Map.<String, Object>of("data", comps));
         }
 
@@ -127,7 +130,9 @@ public class CtrlRest1 {
                     .body(Map.of("erreur", "Erreur lors de la récupération de la compétition"));
         }
 
-        addParticipantsCompetition(comp);
+        if (participants) {
+            addParticipantsCompetition(comp);
+        }
 
         return ResponseEntity.ok(Map.<String, Object>of("data", comp));
     }
@@ -142,13 +147,13 @@ public class CtrlRest1 {
                 .queryParams(paramsParticipations)
                 .toUriString();
 
-        ResponseEntity<List> reponseParticipations = restTemplate.getForEntity(urlGetParticipations, List.class);
+        ResponseEntity<Map> reponseParticipations = restTemplate.getForEntity(urlGetParticipations, Map.class);
 
         // si la requête est OK
         if (reponseParticipations.getStatusCode().is2xxSuccessful()) {
 
             // récupère la liste des participations
-            List participations = reponseParticipations.getBody();
+            List participations = (List) reponseParticipations.getBody().get("data");
 
             // si la liste n'est pas vide
             if (participations != null && !participations.isEmpty()) {
@@ -159,7 +164,7 @@ public class CtrlRest1 {
                 for (Map participation : (List<Map>) participations) {
 
                     // récupère l'id du participant
-                    int idParticipant = (int) participation.get("pfk_participant");
+                    int idParticipant = (int) participation.get("nomUtilisateur");
 
                     // récupère l'id du participant
                     UtilisateurDTO part = utilisateurService.getUtilisateurs(new int[] { idParticipant }).get(0);
@@ -169,7 +174,6 @@ public class CtrlRest1 {
 
                         MultiValueMap<String, String> paramsVotes = new LinkedMultiValueMap<>();
                         paramsVotes.add("idReceveur", Integer.toString(idParticipant));
-                        paramsVotes.add("idVoteur", Integer.toString(comp.getId()));
                         paramsVotes.add("idCompetition", Integer.toString(comp.getId()));
 
                         String urlGetVotes = UriComponentsBuilder.fromUriString(REST2_UR1 + "getVotes")
@@ -177,15 +181,15 @@ public class CtrlRest1 {
                                 .toUriString();
 
                         // fait une requête pour récupérer les votes pour ce participant
-                        ResponseEntity<List> reponseVotes = restTemplate.getForEntity(urlGetVotes,
-                                List.class);
+                        ResponseEntity<Map> reponseVotes = restTemplate.getForEntity(urlGetVotes,
+                                Map.class);
 
                         if (reponseVotes.getStatusCode().is2xxSuccessful()) {
-                            List votes = reponseVotes.getBody();
+                            List votes = (List) reponseVotes.getBody().get("data");
                             if (votes != null && !votes.isEmpty()) {
                                 List<UtilisateurDTO> voteurs = new ArrayList<>();
                                 for (Map vote : (List<Map>) votes) {
-                                    int idVoteur = (int) vote.get("pfkUserVoteur");
+                                    int idVoteur = (int) vote.get("userVoteur");
 
                                     UtilisateurDTO voteur = utilisateurService.getUtilisateurs(new int[] { idVoteur })
                                             .get(0);
@@ -194,7 +198,7 @@ public class CtrlRest1 {
                                         voteurs.add(voteur);
                                     }
 
-                                    voteurs.add(new UtilisateurDTO(idParticipant, voteur.getNom()));
+                                    voteurs.add(new UtilisateurDTO(voteur.getId(), voteur.getNom()));
                                 }
 
                                 partDTOs.add(new ParticipantDTO(idParticipant, part.getNom(), voteurs));
