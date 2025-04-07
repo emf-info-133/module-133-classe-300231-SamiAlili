@@ -6,6 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.rest2.model.Participation;
+import com.rest2.model.ParticipationId;
 import com.rest2.repository.ParticipationRepository;
 
 @Service
@@ -18,7 +19,7 @@ public class ParticipationService {
         this.restTemplate = restTemplate;
     }
 
-    public String participer(int idUtilisateur, int idCompetition) {
+    public boolean participer(int idUtilisateur, int idCompetition) {
 
         String url = UriComponentsBuilder.fromUriString("http://localhost:8081/rest1/getCompetitions")
                                         .queryParam("idCompetition", idCompetition)
@@ -28,40 +29,37 @@ public class ParticipationService {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             String responseBody = response.getBody();
-            if (responseBody != null && responseBody.contains("\"status\":\"success\"")) {
+            if (responseBody != null) {
+
+                ParticipationId newParticipationId = new ParticipationId();
+                newParticipationId.setPfkUtilisateur(idUtilisateur);
+                newParticipationId.setPfkCompetition(idCompetition);
 
                 Participation newParticipation = new Participation();
-                newParticipation.setPfkUtilisateur(idUtilisateur);
-                newParticipation.setPfkCompetition(idCompetition);
+                newParticipation.setId(newParticipationId);
                 participationRepository.save(newParticipation);
 
-                return "Ajouté";
+                return true;
             } else {
-                return "Erreur"; // Si l'API renvoie une erreur ou un statut différent
+                return false; // Si l'API renvoie une erreur ou un statut différent
         
             }
         } else {
-            return "Erreur"; // Si l'API retourne une erreur (code autre que 2xx)
+            return false; // Si l'API retourne une erreur (code autre que 2xx)
         }
-
-        /** 
-        Competition competition = competitionRepository.findById(idCompetition).orElse(null);
-        if (competition == null) {
-        return "competition not found";
-        }
-        Participation newParticipation = new Participation();
-        newParticipation.setPfkUtilisateur(idUtilisateur);
-        newParticipation.setPfkCompetition(idCompetition);
-        participationRepository.save(newParticipation);
-        return "Ajouté";
-        */ 
     }
 
-    public String desinscrire(int idUtilisateur, int idCompetition) {
-        Participation participation = new Participation();
-        participation.setPfkUtilisateur(idUtilisateur);
-        participation.setPfkCompetition(idCompetition);
-        participationRepository.delete(participation);
-        return "Désinscrit";
+    public boolean desinscrire(int idUtilisateur, int idCompetition) {
+        ParticipationId participationId = new ParticipationId();
+        participationId.setPfkUtilisateur(idUtilisateur);
+        participationId.setPfkCompetition(idCompetition);
+
+        // Vérifier si l'entité existe avant de la supprimer
+        if (participationRepository.existsById(participationId)) {
+            participationRepository.deleteById(participationId);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
