@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<!-- 
+   But :    Page HTML qui permet au visiteur de se connecter / s'enregistrer
+   Auteur : Matteo Marinazzo
+   Date :   07.04.2025  / V1.0 
+   -->
+<div id="divLogin">
+  <h1>Page de connexion</h1>
+  <div id="divLoginForm">
+    <input type="text" id="txtUsername" placeholder="Nom d'utilisateur" autofocus />
+    <input type="password" id="txtPassword" placeholder="Mot de passe" />
+
+    <input type="button" id="btnLogin" value="Se connecter" onclick="window.loginCtrl.login()">
+    <p>
+      ou
+    </p>
+    <input type="button" id="btnRegister" value="S'inscrire" onclick="window.loginCtrl.register()">
+  </div>
+</div>

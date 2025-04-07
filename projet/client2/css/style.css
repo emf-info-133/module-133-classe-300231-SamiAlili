@@ -1,0 +1,159 @@
+/*css pour page de connexion*/
+#divLogin {
+    width: 350px;
+    background-color: #777;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px blue;
+    margin: 50px auto;
+    text-align: center;
+}
+
+#divLogin h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+#divLoginForm input[type="text"],
+#divLoginForm input[type="password"] {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+
+#btnLogin,
+#btnRegister {
+    width: 85%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #337aff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#btnRegister {
+    background-color: #4c82ff;
+}
+
+#divLoginForm input[type="button"]:hover {
+    opacity: 0.8;
+}
+
+/*css pour page utiliseur*/
+/* Reset et styles de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #ecf0f1;
+}
+
+#divUserPanel {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Bouton déconnexion */
+#btnLogOut {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    padding: 8px 15px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Sections principales */
+.competitions-section,
+.competition-details-section{
+    width: 25%;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f4f4f4;
+}
+.participant-details-section {
+    width: 50%;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f4f4f4;
+}
+
+.competition-details-section,
+.participant-details-section {
+    display: none;
+    margin-left: 10px;
+}
+
+.participants-title,
+.voters-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #ccc;
+}
+
+.competitions-title,
+#competition-name,
+#participant-title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 27px;
+    text-align: center;
+}
+
+/* Styles des listes */
+.competition-item,
+.participant-item,
+.voter-item {
+    background-color: #ffffff;
+    text-align: center;
+    padding: 12px 15px;
+    margin: 8px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.competition-item:hover,
+.participant-item:hover,
+.voter-item:hover {
+    background-color: #e0e0e0;
+    transform: translateX(5px);
+}
+
+/* Headers */
+.competition-header,
+.participant-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.competition-info,
+.participant-info {
+    margin: 10px 0;
+}
+
+.info-label {
+    font-weight: bold;
+    margin-right: 10px;
+}
