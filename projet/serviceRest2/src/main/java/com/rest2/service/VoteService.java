@@ -1,18 +1,12 @@
 package com.rest2.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.rest2.model.Vote;
-import com.rest2.repository.UtilisateurRepository;
 import com.rest2.repository.VoteRepository;
 
 public class VoteService {
     private final VoteRepository voteRepository;
-    private final UtilisateurRepository utilisateurRepository;
 
-    @Autowired
-    public VoteService(VoteRepository voteRepository, UtilisateurRepository utilisateurRepository) {
-        this.utilisateurRepository = utilisateurRepository;
+    public VoteService(VoteRepository voteRepository) {
         this.voteRepository = voteRepository;
     }
 
@@ -21,6 +15,7 @@ public class VoteService {
         newVote.setPfkCompetition(idCompetition);
         newVote.setPfkVote(idUtilisateur);
         newVote.setPfkRecoit(idReceveur);
+        voteRepository.save(newVote);
         return "Ajouté";
     }
 }

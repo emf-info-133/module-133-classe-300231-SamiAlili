@@ -1,9 +1,12 @@
 package com.rest2.dto;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class ParticipationDTO {
     private Integer competition;
     private String utilisateur;
 
+    @Autowired
     public ParticipationDTO(Integer competition, String utilisateur) {
         this.competition = competition;
         this.utilisateur = utilisateur;
