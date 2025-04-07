@@ -11,6 +11,9 @@ services:
       - "8080:8080"
     networks:
       - api-network
+    environment:
+      REST1_SERVICE_URL: http://rest1:8081/rest1/
+      REST2_SERVICE_URL: http://rest2:8082/rest2/
 
   rest1:
     container_name: rest1-service
@@ -21,7 +24,7 @@ services:
       - "8081:8081"
     environment:
       DATABASE_URL: jdbc:mysql://db-rest1:3306/133-rest1-db
-      REST1_SERVICE_URL: http://rest2:8082/rest2/
+      REST2_SERVICE_URL: http://rest2:8082/rest2/
     depends_on:
       - db-rest1
     networks:
