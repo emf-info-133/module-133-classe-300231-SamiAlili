@@ -1,11 +1,14 @@
 package com.rest1.ctrl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import com.rest1.dto.CompetitionDTO;
+import com.rest1.dto.ParticipantDTO;
 import com.rest1.dto.UtilisateurDTO;
 import com.rest1.service.CompetitionService;
 import com.rest1.service.UtilisateurService;
@@ -102,16 +108,107 @@ public class CtrlRest1 {
     public ResponseEntity<Map<String, Object>> getCompetitions(
             @RequestParam(required = false) Integer idCompetition) {
 
-        Map<String, Object> rep = new HashMap<>();
-
         if (idCompetition == null) {
-            rep.put("data", competitionService.getCompetitions());
-            return ResponseEntity.ok(rep);
+            List<CompetitionDTO> comps = competitionService.getCompetitions();
+
+            if (comps.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("erreur", "Erreur lors de la récupération de la compétition"));
+            }
+
+            comps.forEach((comp) -> addParticipantsCompetition(comp));
+            return ResponseEntity.ok(Map.<String, Object>of("data", comps));
         }
 
-        rep.put("data", competitionService.getCompetitionAvecId(idCompetition.intValue()));
+        CompetitionDTO comp = competitionService.getCompetitionAvecId(idCompetition.intValue());
 
-        return ResponseEntity.ok(rep);
+        if (comp == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("erreur", "Erreur lors de la récupération de la compétition"));
+        }
+
+        addParticipantsCompetition(comp);
+
+        return ResponseEntity.ok(Map.<String, Object>of("data", comp));
+    }
+
+    private CompetitionDTO addParticipantsCompetition(CompetitionDTO comp) {
+
+        // fait la requête pour récupérer la liste des participants de la compétition
+        MultiValueMap<String, String> paramsParticipations = new LinkedMultiValueMap<>();
+        paramsParticipations.add("idCompetition", Integer.toString(comp.getId()));
+
+        String urlGetParticipations = UriComponentsBuilder.fromUriString(REST2_UR1 + "getParticipations")
+                .queryParams(paramsParticipations)
+                .toUriString();
+
+        ResponseEntity<List> reponseParticipations = restTemplate.getForEntity(urlGetParticipations, List.class);
+
+        // si la requête est OK
+        if (reponseParticipations.getStatusCode().is2xxSuccessful()) {
+
+            // récupère la liste des participations
+            List participations = reponseParticipations.getBody();
+
+            // si la liste n'est pas vide
+            if (participations != null && !participations.isEmpty()) {
+
+                List<ParticipantDTO> partDTOs = new ArrayList<>();
+
+                // itère chaque participants de la compétition
+                for (Map participation : (List<Map>) participations) {
+
+                    // récupère l'id du participant
+                    int idParticipant = (int) participation.get("pfk_participant");
+
+                    // récupère l'id du participant
+                    UtilisateurDTO part = utilisateurService.getUtilisateurs(new int[] { idParticipant }).get(0);
+
+                    // si le participant n'est pas null
+                    if (part != null) {
+
+                        MultiValueMap<String, String> paramsVotes = new LinkedMultiValueMap<>();
+                        paramsVotes.add("idReceveur", Integer.toString(idParticipant));
+                        paramsVotes.add("idCompetition", Integer.toString(comp.getId()));
+
+                        String urlGetVotes = UriComponentsBuilder.fromUriString(REST2_UR1 + "getVotes")
+                                .queryParams(paramsVotes)
+                                .toUriString();
+
+                        // fait une requête pour récupérer les votes pour ce participant
+                        ResponseEntity<List> reponseVotes = restTemplate.getForEntity(urlGetVotes,
+                                List.class);
+
+                        if (reponseVotes.getStatusCode().is2xxSuccessful()) {
+                            List votes = reponseVotes.getBody();
+                            if (votes != null && !votes.isEmpty()) {
+                                List<UtilisateurDTO> voteurs = new ArrayList<>();
+                                for (Map vote : (List<Map>) votes) {
+                                    int idVoteur = (int) vote.get("pkf_vote");
+
+                                    UtilisateurDTO voteur = utilisateurService.getUtilisateurs(new int[] { idVoteur })
+                                            .get(0);
+
+                                    if (voteur != null) {
+                                        voteurs.add(voteur);
+                                    }
+
+                                    voteurs.add(new UtilisateurDTO(idParticipant, voteur.getNom()));
+                                }
+
+                                partDTOs.add(new ParticipantDTO(idParticipant, part.getNom(), voteurs));
+
+                            }
+                        }
+                    }
+                }
+
+                comp.setParticipants(partDTOs);
+
+            }
+        }
+
+        return comp;
     }
 
     @PostMapping("/login")

@@ -49,9 +49,18 @@ public class UserManager {
     }
 
     public ResponseEntity<Map> getCompetitions(int idCompetition) {
-        String url = USER_SERVICE_URL + "getCompetitions/" + idCompetition;
+        String url = USER_SERVICE_URL + "getCompetitions";
 
-        return restTemplate.getForEntity(url, Map.class);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        if (idCompetition != -1) {
+            params.add("idCompetition", Integer.toString(idCompetition));
+        }
+
+        String urlFinal = UriComponentsBuilder.fromUriString(url)
+                .queryParams(params)
+                .toUriString();
+        return restTemplate.getForEntity(urlFinal, Map.class);
     }
 
     public ResponseEntity<Map> login(String nomUtilisateur, String mdp) {
