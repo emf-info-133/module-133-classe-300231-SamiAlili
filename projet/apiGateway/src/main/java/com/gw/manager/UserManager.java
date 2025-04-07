@@ -29,6 +29,15 @@ public class UserManager {
         return restTemplate.postForEntity(url, params, Map.class);
     }
 
+    public ResponseEntity<Map> ouvrirCompetition(String categorie, String nom) {
+        String url = USER_SERVICE_URL + "ouvrirCompetition";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("categorie", categorie);
+        params.add("nom", nom);
+
+        return restTemplate.postForEntity(url, params, Map.class);
+    }
+
     public ResponseEntity<Map> supprimerCompetition(int id) {
         String url = USER_SERVICE_URL + "supprimerCompetition/{id}";
         MultiValueMap<String, Integer> params = new LinkedMultiValueMap<>();
@@ -44,6 +53,16 @@ public class UserManager {
         params.add("id", String.valueOf(id));
         params.add("etat", etat);
         params.add("categorie", categorie);
+
+        return restTemplate.exchange(url, HttpMethod.PUT, null, Map.class, params);
+    }
+
+    public ResponseEntity<Map> modifierCompetition(int id, String etat, String categorie, String nom) {
+        String url = USER_SERVICE_URL + "modifierCompetition/" + id;
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("etat", etat);
+        params.add("categorie", categorie);
+        params.add("nom", nom);
 
         return restTemplate.exchange(url, HttpMethod.PUT, null, Map.class, params);
     }

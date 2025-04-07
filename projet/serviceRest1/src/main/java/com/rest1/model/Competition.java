@@ -24,6 +24,9 @@ public class Competition {
     @Column(name = "categorie", length = 45)
     private Categorie categorie;
 
+    @Column(name = "nom", length = 100)
+    private String nom;
+
     public Integer getId() {
         return id;
     }
@@ -46,6 +49,14 @@ public class Competition {
 
     public void setCategorie(Categorie categorie) {
         this.categorie = categorie;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
 }

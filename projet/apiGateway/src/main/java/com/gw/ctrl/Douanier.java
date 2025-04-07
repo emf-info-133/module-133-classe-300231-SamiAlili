@@ -18,7 +18,6 @@ import com.gw.manager.CompetitionManager;
 import com.gw.manager.UserManager;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/gw")
@@ -39,13 +38,14 @@ public class Douanier {
     }
 
     @PostMapping("/ouvrirCompetition")
-    public ResponseEntity<Map> ouvrirCompetition(HttpSession session, @RequestParam String categorie) {
-        if (session.getAttribute("user_type") == "admin") {
-            Map<String, Object> rep = Map.of("error", "Vous n'avez pas les permission d'ouvrir une compétition");
+    public ResponseEntity<Map> ouvrirCompetition(HttpSession session, @RequestParam String categorie,
+            @RequestParam String nom) {
+        if (!"admin".equals(session.getAttribute("user_type"))) {
+            Map<String, Object> rep = Map.of("error", "Vous n'avez pas les permissions d'ouvrir une compétition");
             return ResponseEntity.badRequest().body(rep);
         }
 
-        return userManager.ouvrirCompetition(categorie);
+        return userManager.ouvrirCompetition(categorie, nom);
     }
 
     @DeleteMapping("/supprimerCompetition/{id}")
@@ -60,15 +60,14 @@ public class Douanier {
 
     @PutMapping("/modifierCompetition/{id}")
     public ResponseEntity<Map> modifierCompetition(HttpSession session, @PathVariable int id,
-            @RequestParam String etat,
-            @RequestParam String categorie) {
+            @RequestParam String etat, @RequestParam String categorie, @RequestParam String nom) {
 
-        if (session.getAttribute("user_type") == "admin") {
+        if (!"admin".equals(session.getAttribute("user_type"))) {
             Map<String, Object> rep = Map.of("error", "Vous n'avez pas les permissions de modifier une compétition");
             return ResponseEntity.badRequest().body(rep);
         }
 
-        return userManager.modifierCompetition(id, etat, categorie);
+        return userManager.modifierCompetition(id, etat, categorie, nom);
     }
 
     @GetMapping("/getCompetitions")

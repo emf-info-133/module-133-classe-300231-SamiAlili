@@ -52,15 +52,16 @@ public class CtrlRest1 {
     }
 
     @PostMapping("/ouvrirCompetition")
-    public ResponseEntity<Map<String, String>> postCompetition(@RequestParam String categorie) {
+    public ResponseEntity<Map<String, String>> postCompetition(@RequestParam String categorie,
+            @RequestParam String nom) {
         Map<String, String> rep = new HashMap<>();
 
-        if (categorie == null || categorie.isEmpty()) {
-            rep.put("erreur", "les paramèters sont manquants");
+        if (categorie == null || categorie.isEmpty() || nom == null || nom.isEmpty()) {
+            rep.put("erreur", "Les paramètres sont manquants");
             return ResponseEntity.badRequest().body(rep);
         }
 
-        boolean ajout = competitionService.ajouterCompetition(categorie);
+        boolean ajout = competitionService.ajouterCompetition(categorie, nom);
 
         if (!ajout) {
             rep.put("erreur", "Erreur lors de l'ajout");
@@ -68,7 +69,6 @@ public class CtrlRest1 {
         }
 
         rep.put("message", "Ouverture de la compétition réussie");
-
         return ResponseEntity.ok(rep);
     }
 
@@ -85,26 +85,34 @@ public class CtrlRest1 {
 
         rep.put("message", "Suppression de la compétition réussie");
 
+        // supprime toutes les participations et les votes associés à la compétition
+        String url = REST2_UR1 + "supprimerCompetition";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("idCompetition", Integer.toString(id));
+
+        restTemplate.delete(url, params);
+
         return ResponseEntity.ok(rep);
     }
 
-    @PutMapping("modifierCompetition/{id}")
+    @PutMapping("/modifierCompetition/{id}")
     public ResponseEntity<Map<String, String>> putMethodName(@PathVariable int id, @RequestParam String etat,
-            @RequestParam String categorie) {
+            @RequestParam String categorie, @RequestParam String nom) {
 
         Map<String, String> rep = new HashMap<>();
 
-        boolean mod = competitionService.modifierCompetition(id, etat, categorie);
+        boolean mod = competitionService.modifierCompetition(id, etat, categorie, nom);
 
         if (!mod) {
             rep.put("erreur", "Erreur lors de la modification");
             return ResponseEntity.badRequest().body(rep);
         }
 
+        rep.put("message", "Modification réussie");
         return ResponseEntity.ok(rep);
     }
 
-    @GetMapping("getCompetitions")
+    @GetMapping("/getCompetitions")
     public ResponseEntity<Map<String, Object>> getCompetitions(
             @RequestParam(required = false) Integer idCompetition,
             @RequestParam(required = false, defaultValue = "false") boolean participants) {
@@ -112,29 +120,23 @@ public class CtrlRest1 {
         if (idCompetition == null) {
             List<CompetitionDTO> comps = competitionService.getCompetitions();
 
-            if (comps.isEmpty()) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("erreur", "Erreur lors de la récupération de la compétition"));
-            }
-
-            if (participants) {
+            if (!comps.isEmpty() && participants) {
                 comps.forEach((comp) -> addParticipantsCompetition(comp));
             }
+
             return ResponseEntity.ok(Map.<String, Object>of("data", comps));
         }
 
         CompetitionDTO comp = competitionService.getCompetitionAvecId(idCompetition.intValue());
 
-        if (comp == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erreur", "Erreur lors de la récupération de la compétition"));
-        }
-
-        if (participants) {
+        if (comp != null && participants) {
             addParticipantsCompetition(comp);
         }
 
-        return ResponseEntity.ok(Map.<String, Object>of("data", comp));
+        Map<String, Object> rep = new HashMap<>();
+        rep.put("data", comp);
+
+        return ResponseEntity.ok(rep);
     }
 
     private CompetitionDTO addParticipantsCompetition(CompetitionDTO comp) {

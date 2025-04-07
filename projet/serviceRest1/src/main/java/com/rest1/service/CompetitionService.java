@@ -26,7 +26,7 @@ public class CompetitionService {
 
         List<Competition> competitions = (List<Competition>) competitionRepository.findAll();
 
-        if (competitions == null || competitions.isEmpty()) {
+        if (competitions.isEmpty()) {
             return new ArrayList<>();
         }
 
@@ -34,7 +34,7 @@ public class CompetitionService {
 
         for (Competition c : competitions) {
             competitionsDTO
-                    .add(new CompetitionDTO(c.getId(), c.getEtat().toString(), c.getCategorie().toString(),
+                    .add(new CompetitionDTO(c.getId(), c.getEtat().toString(), c.getCategorie().toString(), c.getNom(),
                             new ArrayList<>()));
         }
 
@@ -49,17 +49,16 @@ public class CompetitionService {
             return null;
         }
 
-        return new CompetitionDTO(c.getId(), c.getEtat(), c.getCategorie(), new ArrayList<>());
+        return new CompetitionDTO(c.getId(), c.getEtat(), c.getCategorie(), c.getNom(), new ArrayList<>());
     }
 
-    public boolean ajouterCompetition(String categorie) {
-
+    public boolean ajouterCompetition(String categorie, String nom) {
         Competition comp = new Competition();
         comp.setEtat(Etat.INSCRIPTION);
         comp.setCategorie(Categorie.valueOf(categorie.toUpperCase()));
+        comp.setNom(nom);
 
         competitionRepository.save(comp);
-
         return true;
     }
 
@@ -86,6 +85,21 @@ public class CompetitionService {
 
         comp.setEtat(Etat.valueOf(categorie.toUpperCase()));
         comp.setCategorie(Categorie.valueOf(categorie.toUpperCase()));
+        competitionRepository.save(comp);
+
+        return true;
+    }
+
+    public boolean modifierCompetition(int idCompetition, String etat, String categorie, String nom) {
+        Competition comp = competitionRepository.findById(idCompetition).orElse(null);
+
+        if (comp == null) {
+            return false;
+        }
+
+        comp.setEtat(Etat.valueOf(etat.toUpperCase()));
+        comp.setCategorie(Categorie.valueOf(categorie.toUpperCase()));
+        comp.setNom(nom);
         competitionRepository.save(comp);
 
         return true;

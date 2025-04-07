@@ -80,7 +80,8 @@ public class CtrlRest2 {
     }
 
     @DeleteMapping("/désinscrire")
-    public ResponseEntity<Map<String, String>> desinscrire(@RequestParam int idUtilisateur, @RequestParam int idCompetition) {
+    public ResponseEntity<Map<String, String>> desinscrire(@RequestParam int idUtilisateur,
+            @RequestParam int idCompetition) {
         Map<String, String> res = new HashMap<>();
         if (participationService.desinscrire(idUtilisateur, idCompetition)) {
             res.put("succès", "Vous vous êtes désinscrit avec succès");
@@ -88,6 +89,25 @@ public class CtrlRest2 {
         } else {
             res.put("erreur", "Erreur lors de la désincription");
             return ResponseEntity.ok(res);
+        }
+    }
+
+    @DeleteMapping("/supprimerCompetition")
+    public ResponseEntity<Map<String, String>> supprimerCompetition(@RequestParam int idCompetition) {
+        Map<String, String> res = new HashMap<>();
+
+        // Supprimer toutes les participations liées à la compétition
+        boolean participationsSupprimees = participationService.supprimerParticipationsParCompetition(idCompetition);
+
+        // Supprimer tous les votes liés à la compétition
+        boolean votesSupprimes = voteService.supprimerVotesParCompetition(idCompetition);
+
+        if (participationsSupprimees && votesSupprimes) {
+            res.put("succès", "La compétition et ses données associées ont été supprimées avec succès");
+            return ResponseEntity.ok(res);
+        } else {
+            res.put("erreur", "Erreur lors de la suppression des données liées à la compétition");
+            return ResponseEntity.badRequest().body(res);
         }
     }
 }
