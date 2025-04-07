@@ -24,6 +24,9 @@ import com.rest1.service.UtilisateurService;
 @RequestMapping("/rest1")
 public class CtrlRest1 {
 
+    private static final String REST2_UR1 = System.getenv().getOrDefault("REST2_SERVICE_URL",
+            "http://localhost:8082/rest2/");
+
     private final RestTemplate restTemplate;
     private final UtilisateurService utilisateurService;
     private final CompetitionService competitionService;
@@ -136,7 +139,8 @@ public class CtrlRest1 {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<Map<String, String>> postMethodName(@RequestParam String nom_utilisateur,
+    public ResponseEntity<Map<String, String>> postMethodName(
+            @RequestParam String nom_utilisateur,
             @RequestParam String mdp) {
 
         Map<String, String> rep = new HashMap<>();
@@ -159,15 +163,15 @@ public class CtrlRest1 {
 
     @GetMapping("/getUtilisateurs")
     public ResponseEntity<Map<String, Object>> getUtilisateurs(
-            @RequestParam(required = false) List<Integer> ids) {
+            @RequestParam(required = false) List<Integer> id) {
 
         Map<String, Object> rep = new HashMap<>();
 
         List<UtilisateurDTO> utilisateurs = null;
-        if (ids == null) {
+        if (id == null) {
             utilisateurs = utilisateurService.getUtilisateurs();
         } else {
-            utilisateurs = utilisateurService.getUtilisateurs(ids.stream().mapToInt(i -> i).toArray());
+            utilisateurs = utilisateurService.getUtilisateurs(id.stream().mapToInt(i -> i).toArray());
         }
 
         if (utilisateurs.size() == 1) {

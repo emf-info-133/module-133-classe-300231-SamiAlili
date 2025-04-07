@@ -73,7 +73,7 @@ public class UtilisateurService {
         }
 
         if (utilisateurs == null || utilisateurs.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<UtilisateurDTO> utilisateursDTO = new ArrayList<>();

@@ -7,9 +7,9 @@ public class CompetitionDTO {
     private int id;
     private String etat;
     private String categorie;
-    private List<String> participants;
+    private List<ParticipantDTO> participants;
 
-    public CompetitionDTO(int id, String etat, String categorie, List<String> participants) {
+    public CompetitionDTO(int id, String etat, String categorie, List<ParticipantDTO> participants) {
         this.id = id;
         this.etat = etat;
         this.categorie = categorie;
@@ -40,11 +40,11 @@ public class CompetitionDTO {
         this.categorie = categorie;
     }
 
-    public List<String> getParticipants() {
+    public List<ParticipantDTO> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<String> participants) {
+    public void setParticipants(List<ParticipantDTO> participants) {
         this.participants = participants;
     }
 }
