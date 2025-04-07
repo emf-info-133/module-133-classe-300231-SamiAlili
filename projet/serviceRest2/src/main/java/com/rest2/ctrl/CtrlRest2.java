@@ -1,5 +1,6 @@
 package com.rest2.ctrl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ public class CtrlRest2 {
     private final ParticipationService participationService;
     private final VoteService voteService;
 
+    @Autowired
     public CtrlRest2(ParticipationService participationService, VoteService voteService) {
         this.participationService = participationService;
         this.voteService = voteService;
@@ -33,26 +35,33 @@ public class CtrlRest2 {
     @PostMapping("/participer")
     public ResponseEntity<String> participerACompetition(@RequestParam int idUtilisateur,
             @RequestParam int idCompetition) {
-        participationService.participer(idUtilisateur, idCompetition);
-        return ResponseEntity.ok("Participation réussie");
+        if (participationService.participer(idUtilisateur, idCompetition)) {
+            return ResponseEntity.ok("Participation réussie");
+        } else {
+            return ResponseEntity.ok("Participation echouée");
+        }
+        
     }
 
     @PostMapping("/voter")
     public ResponseEntity<String> voter(@RequestParam int idCompetition, @RequestParam int idUtilisateur,
             @RequestParam int idReceveur) { // receveur = le user qui reçoit le vote
-        voteService.voter(idCompetition, idUtilisateur, idReceveur);
-        return ResponseEntity.ok("Vous avez voté");
+        if (voteService.voter(idCompetition, idUtilisateur, idReceveur)) {
+            return ResponseEntity.ok("Vous avez voté");
+        } else {
+            return ResponseEntity.ok("Une erreur s'est produite");
+        }
+        
     }
     
     @DeleteMapping("/désinscrire")
     public ResponseEntity<String> desinscrire(@RequestParam int idUtilisateur, @RequestParam int idCompetition) {
-        participationService.desinscrire(idUtilisateur, idCompetition);
-        return ResponseEntity.ok("Désinscription réussie");
-    }
-    
-    @GetMapping("/test")
-    public ResponseEntity<String> getMethodName(@RequestParam String param) {
-        return ResponseEntity.ok("test réussi");
+        if (participationService.desinscrire(idUtilisateur, idCompetition)) {
+            return ResponseEntity.ok("Désinscription réussie");
+        } else {
+            return ResponseEntity.ok("Désinscription echouée");
+        }
+        
     }
     
 }
