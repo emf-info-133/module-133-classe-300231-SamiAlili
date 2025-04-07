@@ -169,6 +169,7 @@ public class CtrlRest1 {
 
                         MultiValueMap<String, String> paramsVotes = new LinkedMultiValueMap<>();
                         paramsVotes.add("idReceveur", Integer.toString(idParticipant));
+                        paramsVotes.add("idVoteur", Integer.toString(comp.getId()));
                         paramsVotes.add("idCompetition", Integer.toString(comp.getId()));
 
                         String urlGetVotes = UriComponentsBuilder.fromUriString(REST2_UR1 + "getVotes")
@@ -184,7 +185,7 @@ public class CtrlRest1 {
                             if (votes != null && !votes.isEmpty()) {
                                 List<UtilisateurDTO> voteurs = new ArrayList<>();
                                 for (Map vote : (List<Map>) votes) {
-                                    int idVoteur = (int) vote.get("pkf_vote");
+                                    int idVoteur = (int) vote.get("pfkUserVoteur");
 
                                     UtilisateurDTO voteur = utilisateurService.getUtilisateurs(new int[] { idVoteur })
                                             .get(0);
