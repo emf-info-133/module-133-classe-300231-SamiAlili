@@ -1,5 +1,7 @@
 package com.rest2.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -7,6 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.rest2.model.Participation;
 import com.rest2.model.ParticipationId;
+import com.rest2.model.Vote;
 import com.rest2.repository.ParticipationRepository;
 
 @Service
@@ -61,5 +64,9 @@ public class ParticipationService {
         } else {
             return false;
         }
+    }
+
+    public List<Participation> getParticipations(int idCompetition) {
+        return participationRepository.findById_PfkCompetition(idCompetition);
     }
 }

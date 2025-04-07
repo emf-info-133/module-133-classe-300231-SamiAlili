@@ -1,5 +1,8 @@
 package com.rest2.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.rest2.model.Vote;
 import com.rest2.model.VoteId;
 import com.rest2.repository.VoteRepository;
@@ -26,7 +29,9 @@ public class VoteService {
         } catch (Exception e) {
             return false;
         }
+    }
 
-        
+    public List<Vote> getVotes(int idReceveur) {
+        return voteRepository.findById_PfkRecoit(idReceveur);
     }
 }
