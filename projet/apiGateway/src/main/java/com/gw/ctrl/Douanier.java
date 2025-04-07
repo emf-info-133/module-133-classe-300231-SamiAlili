@@ -35,43 +35,46 @@ public class Douanier {
     }
 
     @PostMapping("/ouvrirCompetition")
-    public ResponseEntity<String> ouvrirCompetition(HttpSession session, @RequestParam String categorie) {
+    public ResponseEntity<Map> ouvrirCompetition(HttpSession session, @RequestParam String categorie) {
         if (session.getAttribute("user_type") == "admin") {
-            return ResponseEntity.badRequest().body("Vous n'avez pas le droit d'ouvrir une compétition");
+            Map<String, Object> rep = Map.of("error", "Vous n'avez pas les permission d'ouvrir une compétition");
+            return ResponseEntity.badRequest().body(rep);
         }
 
         return userManager.ouvrirCompetition(categorie);
     }
 
     @DeleteMapping("/supprimerCompetition/{id}")
-    public ResponseEntity<String> supprimerCompetition(HttpSession session, @PathVariable int id) {
+    public ResponseEntity<Map> supprimerCompetition(HttpSession session, @PathVariable int id) {
         if (session.getAttribute("user_type") == "admin") {
-            return ResponseEntity.badRequest().body("Vous n'avez pas le droit d'ouvrir une compétition");
+            Map<String, Object> rep = Map.of("error", "Vous n'avez pas les permissions de supprimer une compétition");
+            return ResponseEntity.badRequest().body(rep);
         }
 
         return userManager.supprimerCompetition(id);
     }
 
     @PutMapping("/modifierCompetition/{id}")
-    public ResponseEntity<String> modifierCompetition(HttpSession session, @PathVariable int id,
+    public ResponseEntity<Map> modifierCompetition(HttpSession session, @PathVariable int id,
             @RequestParam String etat,
             @RequestParam String categorie) {
 
         if (session.getAttribute("user_type") == "admin") {
-            return ResponseEntity.badRequest().body("Vous n'avez pas le droit d'ouvrir une compétition");
+            Map<String, Object> rep = Map.of("error", "Vous n'avez pas les permissions de modifier une compétition");
+            return ResponseEntity.badRequest().body(rep);
         }
 
         return userManager.modifierCompetition(id, etat, categorie);
     }
 
     @GetMapping("/getCompetitions")
-    public ResponseEntity<?> getCompetitions(
+    public ResponseEntity<Map> getCompetitions(
             @RequestParam(name = "idCompetition", defaultValue = "-1") int idCompetition) {
         return userManager.getCompetitions(idCompetition);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(HttpSession session, @RequestParam(name = "nom_utilisateur") String nomUtilisateur,
+    public ResponseEntity<Map> login(HttpSession session, @RequestParam(name = "nom_utilisateur") String nomUtilisateur,
             @RequestParam String mdp) {
         ResponseEntity<Map> response = userManager.login(nomUtilisateur, mdp);
 
@@ -91,13 +94,13 @@ public class Douanier {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<String> signIn(@RequestParam String nomUtilisateur,
+    public ResponseEntity<Map> signIn(@RequestParam(name = "nom_utilisateur") String nomUtilisateur,
             @RequestParam String mdp) {
         return userManager.signIn(nomUtilisateur, mdp);
     }
 
     @GetMapping("/getUtilisateurs")
-    public ResponseEntity<?> getUtilisateurs(@RequestParam(required = false) List<Integer> ids) {
-        return userManager.getUtilisateurs(ids);
+    public ResponseEntity<Map> getUtilisateurs(@RequestParam(required = false) List<Integer> id) {
+        return userManager.getUtilisateurs(id);
     }
 }

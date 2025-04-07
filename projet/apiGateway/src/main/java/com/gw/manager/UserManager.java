@@ -1,17 +1,14 @@
 package com.gw.manager;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 public class UserManager {
 
@@ -24,39 +21,37 @@ public class UserManager {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<String> ouvrirCompetition(String categorie) {
+    public ResponseEntity<Map> ouvrirCompetition(String categorie) {
         String url = USER_SERVICE_URL + "ouvrirCompetition";
-        Map<String, String> params = new HashMap<>();
-        params.put("categorie", categorie);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("categorie", categorie);
 
-        return restTemplate.postForEntity(url, params, String.class);
+        return restTemplate.postForEntity(url, params, Map.class);
     }
 
-    public ResponseEntity<String> supprimerCompetition(int id) {
+    public ResponseEntity<Map> supprimerCompetition(int id) {
         String url = USER_SERVICE_URL + "supprimerCompetition/{id}";
-        Map<String, Integer> params = new HashMap<>();
-        params.put("id", id);
+        MultiValueMap<String, Integer> params = new LinkedMultiValueMap<>();
+        params.add("id", id);
 
-        return restTemplate.exchange(url, HttpMethod.DELETE, null, String.class, params);
+        return restTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, params);
 
     }
 
-    public ResponseEntity<String> modifierCompetition(int id, String etat, String categorie) {
+    public ResponseEntity<Map> modifierCompetition(int id, String etat, String categorie) {
         String url = USER_SERVICE_URL + "modifierCompetition";
-        Map<String, String> params = new HashMap<>();
-        params.put("id", String.valueOf(id));
-        params.put("etat", etat);
-        params.put("categorie", categorie);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("id", String.valueOf(id));
+        params.add("etat", etat);
+        params.add("categorie", categorie);
 
-        return restTemplate.exchange(url, HttpMethod.PUT, null, String.class, params);
+        return restTemplate.exchange(url, HttpMethod.PUT, null, Map.class, params);
     }
 
-    public ResponseEntity<?> getCompetitions(int idCompetition) {
-        String url = USER_SERVICE_URL + "getCompetitions/{idCompetition}";
-        Map<String, Integer> params = new HashMap<>();
-        params.put("idCompetition", idCompetition);
+    public ResponseEntity<Map> getCompetitions(int idCompetition) {
+        String url = USER_SERVICE_URL + "getCompetitions/" + idCompetition;
 
-        return restTemplate.getForEntity(url, null, params);
+        return restTemplate.getForEntity(url, Map.class);
     }
 
     public ResponseEntity<Map> login(String nomUtilisateur, String mdp) {
@@ -68,27 +63,29 @@ public class UserManager {
         return restTemplate.postForEntity(url, params, Map.class);
     }
 
-    public ResponseEntity<String> signIn(String nomUtilisateur, String mdp) {
+    public ResponseEntity<Map> signIn(String nomUtilisateur, String mdp) {
         String url = USER_SERVICE_URL + "signIn";
-        Map<String, String> params = new HashMap<>();
-        params.put("nom_utilisateur", nomUtilisateur);
-        params.put("mdp", mdp);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("nom_utilisateur", nomUtilisateur);
+        params.add("mdp", mdp);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(params, headers);
-
-        return restTemplate.postForEntity(url, request, null);
+        return restTemplate.postForEntity(url, params, Map.class);
     }
 
-    public ResponseEntity<?> getUtilisateurs(List<Integer> ids) {
+    public ResponseEntity<Map> getUtilisateurs(List<Integer> ids) {
         String url = USER_SERVICE_URL + "getUtilisateurs";
-        Map<String, Object> params = new HashMap<>();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
         if (!(ids == null || ids.isEmpty())) {
-            params.put("ids", ids);
+            for (Integer id : ids) {
+                params.add("id", id.toString());
+            }
         }
 
-        return restTemplate.getForEntity(url, null, params);
+        String urlFinal = UriComponentsBuilder.fromUriString(url)
+                .queryParams(params)
+                .toUriString();
+
+        return restTemplate.getForEntity(urlFinal, Map.class, params);
     }
 }
