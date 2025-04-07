@@ -10,6 +10,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import com.gw.manager.CompetitionManager;
 import com.gw.manager.UserManager;
 
 @SpringBootApplication
@@ -39,4 +40,8 @@ public class GwApplication {
 		return new UserManager(restTemplate);
 	}
 
+	@Bean
+	public CompetitionManager competitionManager(RestTemplate restTemplate) {
+		return new CompetitionManager(restTemplate);
+	}
 }

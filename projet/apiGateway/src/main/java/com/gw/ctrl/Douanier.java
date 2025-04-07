@@ -14,19 +14,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gw.manager.CompetitionManager;
 import com.gw.manager.UserManager;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/gw")
 public class Douanier {
 
     private final UserManager userManager;
+    private final CompetitionManager competitionManager;
 
     @Autowired
-    public Douanier(UserManager userManager) {
+    public Douanier(UserManager userManager, CompetitionManager competitionManager) {
         this.userManager = userManager;
+        this.competitionManager = competitionManager;
     }
 
     @GetMapping("/")
@@ -103,4 +107,31 @@ public class Douanier {
     public ResponseEntity<Map> getUtilisateurs(@RequestParam(required = false) List<Integer> id) {
         return userManager.getUtilisateurs(id);
     }
+
+    @GetMapping("/getVotes")
+    public ResponseEntity<String> getVotes(@RequestParam int idReceveur, @RequestParam int idCompetition) {
+        return competitionManager.getVotes(idReceveur, idCompetition);
+    }
+
+    @PostMapping("/voter")
+    public ResponseEntity<String> postMethodName(@RequestParam int idCompetition, int idVoteur, int idReceveur) {
+        return competitionManager.voter(idCompetition, idVoteur, idReceveur);
+    }
+
+    @GetMapping("/getParticipations")
+    public ResponseEntity<String> getParticipations(@RequestParam int idCompetition) {
+        return competitionManager.getParticipations(idCompetition);
+    }
+
+    @PostMapping("/participer")
+    public ResponseEntity<String> participerACompetition(@RequestParam int idUtilisateur,
+            @RequestParam int idCompetition) {
+        return competitionManager.participerACompetition(idUtilisateur, idCompetition);
+    }
+
+    @DeleteMapping("/desinscrire")
+    public ResponseEntity<String> desinscrire(@RequestParam int idUtilisateur, @RequestParam int idCompetition) {
+        return competitionManager.desinscrire(idUtilisateur, idCompetition);
+    }
+
 }
