@@ -10,10 +10,10 @@ public class VoteId {
     private Integer pfkCompetition;
 
     @Column(name = "pfk_vote")
-    private Integer pfkVote;
+    private Integer pfkUserVoteur;
 
     @Column(name = "pfk_recoit")
-    private Integer pfkRecoit;
+    private Integer pfkUserReceveur;
 
     // Getters et Setters
     public Integer getPfkCompetition() {
@@ -24,20 +24,20 @@ public class VoteId {
         this.pfkCompetition = pfkCompetition;
     }
 
-    public Integer getPfkVote() {
-        return pfkVote;
+    public Integer getPfkUserVoteur() {
+        return pfkUserVoteur;
     }
 
-    public void setPfkVote(Integer pfkVote) {
-        this.pfkVote = pfkVote;
+    public void setPfkUserVoteur(Integer pfkUserVoteur) {
+        this.pfkUserVoteur = pfkUserVoteur;
     }
 
-    public Integer getPfkRecoit() {
-        return pfkRecoit;
+    public Integer getPfkUserReceveur() {
+        return pfkUserReceveur;
     }
 
-    public void setPfkRecoit(Integer pfkRecoit) {
-        this.pfkRecoit = pfkRecoit;
+    public void setPfkUserReceveur(Integer pfkUserReceveur) {
+        this.pfkUserReceveur = pfkUserReceveur;
     }
 
     // hashCode et equals pour VoteId (nécessaire pour la clé composite)

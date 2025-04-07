@@ -1,5 +1,6 @@
 package com.rest2.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -7,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.rest2.dto.ParticipationDTO;
 import com.rest2.model.Participation;
 import com.rest2.model.ParticipationId;
-import com.rest2.model.Vote;
 import com.rest2.repository.ParticipationRepository;
 
 @Service
@@ -66,7 +67,14 @@ public class ParticipationService {
         }
     }
 
-    public List<Participation> getParticipations(int idCompetition) {
-        return participationRepository.findById_PfkCompetition(idCompetition);
+    public List<ParticipationDTO> getParticipations(int idCompetition) {
+        List<Participation> participations = participationRepository.findById_PfkCompetition(idCompetition);
+        List<ParticipationDTO> participationDTOs = new ArrayList<>();
+
+        for (Participation participation : participations) {
+            ParticipationDTO participationDTO = new ParticipationDTO(participation.getId().getPfkCompetition(), participation.getId().getPfkUtilisateur());
+            participationDTOs.add(participationDTO);
+        }
+        return participationDTOs;
     }
 }

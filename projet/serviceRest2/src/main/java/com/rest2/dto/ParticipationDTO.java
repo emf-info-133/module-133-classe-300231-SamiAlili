@@ -3,11 +3,12 @@ package com.rest2.dto;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ParticipationDTO {
+
     private Integer competition;
-    private String utilisateur;
+    private Integer utilisateur;
 
     @Autowired
-    public ParticipationDTO(Integer competition, String utilisateur) {
+    public ParticipationDTO(Integer competition, Integer utilisateur) {
         this.competition = competition;
         this.utilisateur = utilisateur;
     }
@@ -20,11 +21,11 @@ public class ParticipationDTO {
         this.competition = competition;
     }
 
-    public String getNomUtilisateur() {
+    public Integer getNomUtilisateur() {
         return utilisateur;
     }
 
-    public void setNomUtilisateur(String utilisateur) {
+    public void setNomUtilisateur(Integer utilisateur) {
         this.utilisateur = utilisateur;
     }
 }

@@ -1,6 +1,8 @@
 package com.rest2.ctrl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,46 +37,57 @@ public class CtrlRest2 {
         return "";
     }
 
-    @GetMapping("/getVotes")//get tous les votes du receveur du vote
-    public ResponseEntity<List<Vote>> getVotes(@RequestParam int idReceveur, @RequestParam int idCompetition) {
-        return ResponseEntity.ok(voteService.getVotes(idReceveur, idCompetition));
+    @GetMapping("/getVotes") // get tous les votes du receveur du vote
+    public ResponseEntity<Map<String, Object>> getVotes(@RequestParam int idReceveur, @RequestParam int idCompetition) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("data", voteService.getVotes(idReceveur, idCompetition));
+        return ResponseEntity.ok(res);
     }
-    
-    @PostMapping("/voter") 
-    public ResponseEntity<String> voter(@RequestParam int idCompetition, @RequestParam int idUtilisateur,
-            @RequestParam int idReceveur) { // receveur = le user qui reçoit le vote
-        if (voteService.voter(idCompetition, idUtilisateur, idReceveur)) {
-            return ResponseEntity.ok("Vous avez voté");
-        } else {
-            return ResponseEntity.ok("Une erreur s'est produite");
-        }
 
+    @PostMapping("/voter")
+    public ResponseEntity<Map<String, String>> voter(@RequestParam int idCompetition, @RequestParam int idUtilisateur,
+            @RequestParam int idReceveur) { // receveur = le user qui reçoit le vote
+        Map<String, String> res = new HashMap<>();
+
+        if (voteService.voter(idCompetition, idUtilisateur, idReceveur)) {
+            res.put("succès", "Vous avez voté avec succès");
+            return ResponseEntity.ok(res);
+        } else {
+            res.put("erreur", "Erreur lors du vote");
+            return ResponseEntity.ok(res);
+        }
     }
 
     @GetMapping("/getParticipations")
-    public ResponseEntity<List<Participation>> getParticipations(@RequestParam int idCompetition) {
-        return ResponseEntity.ok(participationService.getParticipations(idCompetition));
+    public ResponseEntity<Map<String, Object>> getParticipations(@RequestParam int idCompetition) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("data", participationService.getParticipations(idCompetition));
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/participer")
-    public ResponseEntity<String> participerACompetition(@RequestParam int idUtilisateur,
+    public ResponseEntity<Map<String, String>> participerACompetition(@RequestParam int idUtilisateur,
             @RequestParam int idCompetition) {
+        Map<String, String> res = new HashMap<>();
         if (participationService.participer(idUtilisateur, idCompetition)) {
-            return ResponseEntity.ok("Participation réussie");
+            res.put("succès", "Votre participation a été enregistrée");
+            return ResponseEntity.ok(res);
         } else {
-            return ResponseEntity.ok("Participation echouée");
+            res.put("erreur", "Erreur lors de la participation");
+            return ResponseEntity.ok(res);
         }
 
     }
 
     @DeleteMapping("/désinscrire")
-    public ResponseEntity<String> desinscrire(@RequestParam int idUtilisateur, @RequestParam int idCompetition) {
+    public ResponseEntity<Map<String, String>> desinscrire(@RequestParam int idUtilisateur, @RequestParam int idCompetition) {
+        Map<String, String> res = new HashMap<>();
         if (participationService.desinscrire(idUtilisateur, idCompetition)) {
-            return ResponseEntity.ok("Désinscription réussie");
+            res.put("succès", "Vous vous êtes désinscrit avec succès");
+            return ResponseEntity.ok(res);
         } else {
-            return ResponseEntity.ok("Désinscription echouée");
+            res.put("erreur", "Erreur lors de la désincription");
+            return ResponseEntity.ok(res);
         }
-
     }
-
 }

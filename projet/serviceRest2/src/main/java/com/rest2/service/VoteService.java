@@ -1,7 +1,8 @@
 package com.rest2.service;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import com.rest2.dto.VoteDTO;
 import com.rest2.model.Vote;
 import com.rest2.model.VoteId;
 import com.rest2.repository.VoteRepository;
@@ -17,20 +18,29 @@ public class VoteService {
         try {
             VoteId newVoteId = new VoteId();
             newVoteId.setPfkCompetition(idCompetition);
-            newVoteId.setPfkVote(idUtilisateur);
-            newVoteId.setPfkRecoit(idReceveur);
+            newVoteId.setPfkUserVoteur(idUtilisateur);
+            newVoteId.setPfkUserReceveur(idReceveur);
 
             Vote newVote = new Vote();
             newVote.setId(newVoteId);
             voteRepository.save(newVote);
-            
+
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public List<Vote> getVotes(int idReceveur, int idCompetition) {
-        return voteRepository.findById_PfkRecoitAndId_PfkCompetition(idReceveur, idCompetition);
+    public List<VoteDTO> getVotes(int idReceveur, int idCompetition) {
+        List<Vote> votes = voteRepository.findById_PfkRecoitAndId_PfkCompetition(idReceveur, idCompetition);
+
+        List<VoteDTO> voteDTOs = new ArrayList<>();
+
+        for (Vote vote : votes) {
+            VoteDTO voteDTO = new VoteDTO(vote.getId().getPfkUserVoteur(), vote.getId().getPfkUserReceveur(),
+                    vote.getId().getPfkCompetition());
+            voteDTOs.add(voteDTO);
+        }
+        return voteDTOs;
     }
 }
