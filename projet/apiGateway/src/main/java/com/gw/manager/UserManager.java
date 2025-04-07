@@ -52,6 +52,7 @@ public class UserManager {
         String url = USER_SERVICE_URL + "getCompetitions";
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("participants", Boolean.TRUE.toString());
 
         if (idCompetition != -1) {
             params.add("idCompetition", Integer.toString(idCompetition));

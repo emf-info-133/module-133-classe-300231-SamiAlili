@@ -114,7 +114,15 @@ public class Douanier {
     }
 
     @PostMapping("/voter")
-    public ResponseEntity<String> postMethodName(@RequestParam int idCompetition, int idVoteur, int idReceveur) {
+    public ResponseEntity<Map> postMethodName(HttpSession session, @RequestParam int idCompetition,
+            @RequestParam int idReceveur) {
+
+        if (session.getAttribute("user_id") == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Vous devez vous connecter"));
+        }
+
+        int idVoteur = (int) session.getAttribute("user_id");
+
         return competitionManager.voter(idCompetition, idVoteur, idReceveur);
     }
 
@@ -124,13 +132,26 @@ public class Douanier {
     }
 
     @PostMapping("/participer")
-    public ResponseEntity<String> participerACompetition(@RequestParam int idUtilisateur,
+    public ResponseEntity<String> participerACompetition(HttpSession session,
             @RequestParam int idCompetition) {
+
+        if (session.getAttribute("user_id") == null) {
+            return ResponseEntity.badRequest().body("Vous devez vous connecter");
+        }
+
+        int idUtilisateur = (int) session.getAttribute("user_id");
+
         return competitionManager.participerACompetition(idUtilisateur, idCompetition);
     }
 
     @DeleteMapping("/desinscrire")
-    public ResponseEntity<String> desinscrire(@RequestParam int idUtilisateur, @RequestParam int idCompetition) {
+    public ResponseEntity<String> desinscrire(HttpSession session, @RequestParam int idUtilisateur,
+            @RequestParam int idCompetition) {
+
+        if ((int) session.getAttribute("user_id") != idUtilisateur || session.getAttribute("user_type") != "admin") {
+            return ResponseEntity.badRequest().body("Vous devez vous connecter");
+        }
+
         return competitionManager.desinscrire(idUtilisateur, idCompetition);
     }
 
