@@ -32,7 +32,7 @@ public class VoteService {
     }
 
     public List<VoteDTO> getVotes(int idReceveur, int idCompetition) {
-        List<Vote> votes = voteRepository.findById_PfkRecoitAndId_PfkCompetition(idReceveur, idCompetition);
+        List<Vote> votes = voteRepository.findById_PfkUserReceveurAndId_PfkCompetition(idReceveur, idCompetition);
 
         List<VoteDTO> voteDTOs = new ArrayList<>();
 
