@@ -46,8 +46,8 @@ public class ParticipationService {
             if (responseBody1.get("data") != null && responseBody2.get("data") != null) {
                 // Les inscriptions sont autorisés uniquement lors de l'état "inscription" d'une
                 // compétition
-                String etat = ((Map<String, String>) responseBody1.get("data")).get("etat");
-                if (etat.toLowerCase() == "inscription") {
+                String etat = ((Map<String, String>) responseBody1.get("data")).get("etat").toLowerCase();
+                if ("inscription".equals(etat)) {
                     ParticipationId newParticipationId = new ParticipationId();
                     newParticipationId.setPfkUtilisateur(idUtilisateur);
                     newParticipationId.setPfkCompetition(idCompetition);
