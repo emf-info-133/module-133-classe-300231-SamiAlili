@@ -52,15 +52,16 @@ public class CtrlRest1 {
     }
 
     @PostMapping("/ouvrirCompetition")
-    public ResponseEntity<Map<String, String>> postCompetition(@RequestParam String categorie) {
+    public ResponseEntity<Map<String, String>> postCompetition(@RequestParam String categorie,
+            @RequestParam String nom) {
         Map<String, String> rep = new HashMap<>();
 
-        if (categorie == null || categorie.isEmpty()) {
-            rep.put("erreur", "les paramèters sont manquants");
+        if (categorie == null || categorie.isEmpty() || nom == null || nom.isEmpty()) {
+            rep.put("erreur", "Les paramètres sont manquants");
             return ResponseEntity.badRequest().body(rep);
         }
 
-        boolean ajout = competitionService.ajouterCompetition(categorie);
+        boolean ajout = competitionService.ajouterCompetition(categorie, nom);
 
         if (!ajout) {
             rep.put("erreur", "Erreur lors de l'ajout");
@@ -68,7 +69,6 @@ public class CtrlRest1 {
         }
 
         rep.put("message", "Ouverture de la compétition réussie");
-
         return ResponseEntity.ok(rep);
     }
 
@@ -85,51 +85,58 @@ public class CtrlRest1 {
 
         rep.put("message", "Suppression de la compétition réussie");
 
+        // supprime toutes les participations et les votes associés à la compétition
+        String url = REST2_UR1 + "supprimerCompetition";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("idCompetition", Integer.toString(id));
+
+        restTemplate.delete(url, params);
+
         return ResponseEntity.ok(rep);
     }
 
-    @PutMapping("modifierCompetition/{id}")
+    @PutMapping("/modifierCompetition/{id}")
     public ResponseEntity<Map<String, String>> putMethodName(@PathVariable int id, @RequestParam String etat,
-            @RequestParam String categorie) {
+            @RequestParam String categorie, @RequestParam String nom) {
 
         Map<String, String> rep = new HashMap<>();
 
-        boolean mod = competitionService.modifierCompetition(id, etat, categorie);
+        boolean mod = competitionService.modifierCompetition(id, etat, categorie, nom);
 
         if (!mod) {
             rep.put("erreur", "Erreur lors de la modification");
             return ResponseEntity.badRequest().body(rep);
         }
 
+        rep.put("message", "Modification réussie");
         return ResponseEntity.ok(rep);
     }
 
-    @GetMapping("getCompetitions")
+    @GetMapping("/getCompetitions")
     public ResponseEntity<Map<String, Object>> getCompetitions(
-            @RequestParam(required = false) Integer idCompetition) {
+            @RequestParam(required = false) Integer idCompetition,
+            @RequestParam(required = false, defaultValue = "false") boolean participants) {
 
         if (idCompetition == null) {
             List<CompetitionDTO> comps = competitionService.getCompetitions();
 
-            if (comps.isEmpty()) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("erreur", "Erreur lors de la récupération de la compétition"));
+            if (!comps.isEmpty() && participants) {
+                comps.forEach((comp) -> addParticipantsCompetition(comp));
             }
 
-            comps.forEach((comp) -> addParticipantsCompetition(comp));
             return ResponseEntity.ok(Map.<String, Object>of("data", comps));
         }
 
         CompetitionDTO comp = competitionService.getCompetitionAvecId(idCompetition.intValue());
 
-        if (comp == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erreur", "Erreur lors de la récupération de la compétition"));
+        if (comp != null && participants) {
+            addParticipantsCompetition(comp);
         }
 
-        addParticipantsCompetition(comp);
+        Map<String, Object> rep = new HashMap<>();
+        rep.put("data", comp);
 
-        return ResponseEntity.ok(Map.<String, Object>of("data", comp));
+        return ResponseEntity.ok(rep);
     }
 
     private CompetitionDTO addParticipantsCompetition(CompetitionDTO comp) {
@@ -142,13 +149,13 @@ public class CtrlRest1 {
                 .queryParams(paramsParticipations)
                 .toUriString();
 
-        ResponseEntity<List> reponseParticipations = restTemplate.getForEntity(urlGetParticipations, List.class);
+        ResponseEntity<Map> reponseParticipations = restTemplate.getForEntity(urlGetParticipations, Map.class);
 
         // si la requête est OK
         if (reponseParticipations.getStatusCode().is2xxSuccessful()) {
 
             // récupère la liste des participations
-            List participations = reponseParticipations.getBody();
+            List participations = (List) reponseParticipations.getBody().get("data");
 
             // si la liste n'est pas vide
             if (participations != null && !participations.isEmpty()) {
@@ -159,7 +166,7 @@ public class CtrlRest1 {
                 for (Map participation : (List<Map>) participations) {
 
                     // récupère l'id du participant
-                    int idParticipant = (int) participation.get("pfk_participant");
+                    int idParticipant = (int) participation.get("nomUtilisateur");
 
                     // récupère l'id du participant
                     UtilisateurDTO part = utilisateurService.getUtilisateurs(new int[] { idParticipant }).get(0);
@@ -169,7 +176,6 @@ public class CtrlRest1 {
 
                         MultiValueMap<String, String> paramsVotes = new LinkedMultiValueMap<>();
                         paramsVotes.add("idReceveur", Integer.toString(idParticipant));
-                        paramsVotes.add("idVoteur", Integer.toString(comp.getId()));
                         paramsVotes.add("idCompetition", Integer.toString(comp.getId()));
 
                         String urlGetVotes = UriComponentsBuilder.fromUriString(REST2_UR1 + "getVotes")
@@ -177,15 +183,15 @@ public class CtrlRest1 {
                                 .toUriString();
 
                         // fait une requête pour récupérer les votes pour ce participant
-                        ResponseEntity<List> reponseVotes = restTemplate.getForEntity(urlGetVotes,
-                                List.class);
+                        ResponseEntity<Map> reponseVotes = restTemplate.getForEntity(urlGetVotes,
+                                Map.class);
 
                         if (reponseVotes.getStatusCode().is2xxSuccessful()) {
-                            List votes = reponseVotes.getBody();
+                            List votes = (List) reponseVotes.getBody().get("data");
                             if (votes != null && !votes.isEmpty()) {
                                 List<UtilisateurDTO> voteurs = new ArrayList<>();
                                 for (Map vote : (List<Map>) votes) {
-                                    int idVoteur = (int) vote.get("pfkUserVoteur");
+                                    int idVoteur = (int) vote.get("userVoteur");
 
                                     UtilisateurDTO voteur = utilisateurService.getUtilisateurs(new int[] { idVoteur })
                                             .get(0);
@@ -194,7 +200,7 @@ public class CtrlRest1 {
                                         voteurs.add(voteur);
                                     }
 
-                                    voteurs.add(new UtilisateurDTO(idParticipant, voteur.getNom()));
+                                    voteurs.add(new UtilisateurDTO(voteur.getId(), voteur.getNom()));
                                 }
 
                                 partDTOs.add(new ParticipantDTO(idParticipant, part.getNom(), voteurs));

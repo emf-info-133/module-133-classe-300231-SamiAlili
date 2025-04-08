@@ -7,12 +7,14 @@ public class CompetitionDTO {
     private int id;
     private String etat;
     private String categorie;
+    private String nom; // Nouvel attribut
     private List<ParticipantDTO> participants;
 
-    public CompetitionDTO(int id, String etat, String categorie, List<ParticipantDTO> participants) {
+    public CompetitionDTO(int id, String etat, String categorie, String nom, List<ParticipantDTO> participants) {
         this.id = id;
         this.etat = etat;
         this.categorie = categorie;
+        this.nom = nom;
         this.participants = participants;
     }
 
@@ -38,6 +40,14 @@ public class CompetitionDTO {
 
     public void setCategorie(String categorie) {
         this.categorie = categorie;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
     public List<ParticipantDTO> getParticipants() {

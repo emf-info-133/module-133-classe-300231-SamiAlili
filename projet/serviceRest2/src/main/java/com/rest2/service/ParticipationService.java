@@ -29,15 +29,11 @@ public class ParticipationService {
 
     public boolean participer(int idUtilisateur, int idCompetition) {
 
-        String url1 = UriComponentsBuilder.fromUriString(REST1_URL + "getCompetitions")
-                .queryParam("idCompetition", idCompetition)
-                .toUriString();
-        String url2 = UriComponentsBuilder.fromUriString(REST1_URL + "getUtilisateurs")
-                .queryParam("id", idUtilisateur)
-                .toUriString();
+        String url = UriComponentsBuilder.fromUriString("http://localhost:8081/rest1/getCompetitions")
+                                        .queryParam("idCompetition", idCompetition)
+                                        .toUriString();
 
-        ResponseEntity<Map> response1 = restTemplate.getForEntity(url1, Map.class);
-        ResponseEntity<Map> response2 = restTemplate.getForEntity(url2, Map.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(url,String.class);
 
         if (response1.getStatusCode().is2xxSuccessful() && response2.getStatusCode().is2xxSuccessful()) {
             Map responseBody1 = response1.getBody();
@@ -108,5 +104,14 @@ public class ParticipationService {
             participationDTOs.add(participationDTO);
         }
         return participationDTOs;
+    }
+
+    public boolean supprimerParticipationsParCompetition(int idCompetition) {
+        try {
+            participationRepository.deleteById_PfkCompetition(idCompetition);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

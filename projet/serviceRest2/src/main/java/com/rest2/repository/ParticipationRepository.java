@@ -11,4 +11,5 @@ public interface ParticipationRepository extends CrudRepository<Participation, P
 
     public List<Participation> findById_PfkCompetition(int idCompetition);
 
+    void deleteById_PfkCompetition(int idCompetition);
 }

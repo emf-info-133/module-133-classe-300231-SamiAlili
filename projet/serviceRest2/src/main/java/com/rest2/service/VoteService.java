@@ -76,4 +76,13 @@ public class VoteService {
         }
         return voteDTOs;
     }
+
+    public boolean supprimerVotesParCompetition(int idCompetition) {
+        try {
+            voteRepository.deleteById_PfkCompetition(idCompetition);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

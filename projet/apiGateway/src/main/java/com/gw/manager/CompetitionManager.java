@@ -1,5 +1,7 @@
 package com.gw.manager;
 
+import java.util.Map;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -31,14 +33,14 @@ public class CompetitionManager {
         return restTemplate.getForEntity(urlFinal, String.class);
     }
 
-    public ResponseEntity<String> voter(int idCompetition, int idUtilisateur, int idReceveur) {
+    public ResponseEntity<Map> voter(int idCompetition, int idUtilisateur, int idReceveur) {
         String url = COMPETITION_SERVICE_URL + "voter";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("idCompetition", Integer.toString(idCompetition));
         params.add("idUtilisateur", Integer.toString(idUtilisateur));
         params.add("idReceveur", Integer.toString(idReceveur));
 
-        return restTemplate.postForEntity(url, params, String.class);
+        return restTemplate.postForEntity(url, params, Map.class);
     }
 
     public ResponseEntity<String> getParticipations(int idCompetition) {
