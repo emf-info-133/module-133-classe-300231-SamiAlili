@@ -41,7 +41,10 @@ public class VoteService {
             Map responseBody2 = response2.getBody();
             List responseList1 = (List) responseBody2.get("data");
             if (responseBody1.get("data") != null && responseList1.size() == 2) {
-                try {
+                // Les votes sont autorisés uniquement lors de l'état "votation" d'une
+                // compétition
+                String etat = ((Map<String, String>) responseBody1.get("data")).get("etat");
+                if (etat.toLowerCase() == "votation") {
                     VoteId newVoteId = new VoteId();
                     newVoteId.setPfkCompetition(idCompetition);
                     newVoteId.setPfkUserVoteur(idUtilisateur);
@@ -52,16 +55,10 @@ public class VoteService {
                     voteRepository.save(newVote);
 
                     return true;
-                } catch (Exception e) {
-                    return false;
-                }
-            } else {
-                return false; // Si l'API renvoie une erreur ou un statut différent
-
-            }
-        } else {
-            return false; // Si l'API retourne une erreur (code autre que 2xx)
+                }              
+            } 
         }
+        return false;
     }
 
     public List<VoteDTO> getVotes(int idReceveur, int idCompetition) {

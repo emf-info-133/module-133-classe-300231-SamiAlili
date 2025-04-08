@@ -54,13 +54,9 @@ public class ParticipationService {
                 participationRepository.save(newParticipation);
 
                 return true;
-            } else {
-                return false; // Si l'API renvoie une erreur ou un statut différent
-
             }
-        } else {
-            return false; // Si l'API retourne une erreur (code autre que 2xx)
         }
+        return false;
     }
 
     public boolean desinscrire(int idUtilisateur, int idCompetition) {
@@ -86,16 +82,10 @@ public class ParticipationService {
                 if (participationRepository.existsById(participationId)) {
                     participationRepository.deleteById(participationId);
                     return true;
-                } else {
-                    return false;
                 }
-            } else {
-                return false; // Si l'API renvoie une erreur ou un statut différent
-
             }
-        } else {
-            return false; // Si l'API retourne une erreur (code autre que 2xx)
         }
+        return false;
     }
 
     public List<ParticipationDTO> getParticipations(int idCompetition) {
