@@ -55,6 +55,8 @@ services:
       - "3307:3306"
     networks:
       - api-network
+    volumes:
+      - rest1db_data:/var/lib/mysql
 
   db-rest2:
     image: mysql:8
@@ -67,7 +69,13 @@ services:
       - "3308:3306"
     networks:
       - api-network
+    volumes:
+      - rest2db_data:/var/lib/mysql
 
 networks:
   api-network:
     driver: bridge
+
+volumes:
+  rest1db_data:
+  rest2db_data:

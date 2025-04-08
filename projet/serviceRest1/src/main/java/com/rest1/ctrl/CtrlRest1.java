@@ -31,8 +31,7 @@ import com.rest1.service.UtilisateurService;
 @RequestMapping("/rest1")
 public class CtrlRest1 {
 
-    private static final String REST2_URL = System.getenv().getOrDefault("REST2_SERVICE_URL",
-            "http://localhost:8082/rest2/");
+    private final String REST2_URL;
 
     private final RestTemplate restTemplate;
     private final UtilisateurService utilisateurService;
@@ -44,6 +43,8 @@ public class CtrlRest1 {
         this.utilisateurService = utilisateurService;
         this.competitionService = competitionService;
         this.restTemplate = restTemplate;
+
+        REST2_URL = System.getenv().getOrDefault("REST2_SERVICE_URL", "http://localhost:8082/rest2/");
     }
 
     // Handler pour GET
@@ -172,7 +173,9 @@ public class CtrlRest1 {
                     int idParticipant = (int) participation.get("nomUtilisateur");
 
                     // récupère l'id du participant
-                    UtilisateurDTO part = utilisateurService.getUtilisateurs(new int[] { idParticipant }).get(0);
+                    List<UtilisateurDTO> parts = utilisateurService.getUtilisateurs(new int[] { idParticipant });
+
+                    UtilisateurDTO part = parts != null && !parts.isEmpty() ? parts.get(0) : null;
 
                     // si le participant n'est pas null
                     if (part != null) {
@@ -189,27 +192,31 @@ public class CtrlRest1 {
                         ResponseEntity<Map> reponseVotes = restTemplate.getForEntity(urlGetVotes,
                                 Map.class);
 
+                        List<UtilisateurDTO> voteurs = new ArrayList<>();
+
                         if (reponseVotes.getStatusCode().is2xxSuccessful()) {
+
                             List votes = (List) reponseVotes.getBody().get("data");
+
                             if (votes != null && !votes.isEmpty()) {
-                                List<UtilisateurDTO> voteurs = new ArrayList<>();
                                 for (Map vote : (List<Map>) votes) {
                                     int idVoteur = (int) vote.get("userVoteur");
 
-                                    UtilisateurDTO voteur = utilisateurService.getUtilisateurs(new int[] { idVoteur })
-                                            .get(0);
+                                    List<UtilisateurDTO> voteur = utilisateurService
+                                            .getUtilisateurs(new int[] { idVoteur });
+
+                                    UtilisateurDTO vDTO = voteur != null && !voteur.isEmpty() ? voteur.get(0) : null;
 
                                     if (voteur != null) {
-                                        voteurs.add(voteur);
+                                        voteurs.add(vDTO);
                                     }
 
-                                    voteurs.add(new UtilisateurDTO(voteur.getId(), voteur.getNom()));
                                 }
-
-                                partDTOs.add(new ParticipantDTO(idParticipant, part.getNom(), voteurs));
 
                             }
                         }
+
+                        partDTOs.add(new ParticipantDTO(idParticipant, part.getNom(), voteurs));
                     }
                 }
 
