@@ -30,7 +30,7 @@ import com.rest1.service.UtilisateurService;
 @RequestMapping("/rest1")
 public class CtrlRest1 {
 
-    private static final String REST2_UR1 = System.getenv().getOrDefault("REST2_SERVICE_URL",
+    private static final String REST2_URL = System.getenv().getOrDefault("REST2_SERVICE_URL",
             "http://localhost:8082/rest2/");
 
     private final RestTemplate restTemplate;
@@ -86,7 +86,7 @@ public class CtrlRest1 {
         rep.put("message", "Suppression de la compétition réussie");
 
         // supprime toutes les participations et les votes associés à la compétition
-        String url = REST2_UR1 + "supprimerCompetition";
+        String url = REST2_URL + "supprimerCompetition";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("idCompetition", Integer.toString(id));
 
@@ -145,7 +145,7 @@ public class CtrlRest1 {
         MultiValueMap<String, String> paramsParticipations = new LinkedMultiValueMap<>();
         paramsParticipations.add("idCompetition", Integer.toString(comp.getId()));
 
-        String urlGetParticipations = UriComponentsBuilder.fromUriString(REST2_UR1 + "getParticipations")
+        String urlGetParticipations = UriComponentsBuilder.fromUriString(REST2_URL + "getParticipations")
                 .queryParams(paramsParticipations)
                 .toUriString();
 
@@ -178,7 +178,7 @@ public class CtrlRest1 {
                         paramsVotes.add("idReceveur", Integer.toString(idParticipant));
                         paramsVotes.add("idCompetition", Integer.toString(comp.getId()));
 
-                        String urlGetVotes = UriComponentsBuilder.fromUriString(REST2_UR1 + "getVotes")
+                        String urlGetVotes = UriComponentsBuilder.fromUriString(REST2_URL + "getVotes")
                                 .queryParams(paramsVotes)
                                 .toUriString();
 
