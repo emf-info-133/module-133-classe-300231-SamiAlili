@@ -3,7 +3,10 @@ package com.gw.manager;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -39,12 +42,9 @@ public class UserManager {
     }
 
     public ResponseEntity<Map> supprimerCompetition(int id) {
-        String url = USER_SERVICE_URL + "supprimerCompetition/{id}";
-        MultiValueMap<String, Integer> params = new LinkedMultiValueMap<>();
-        params.add("id", id);
+        String url = USER_SERVICE_URL + "supprimerCompetition/" + id;
 
-        return restTemplate.exchange(url, HttpMethod.DELETE, null, Map.class, params);
-
+        return restTemplate.exchange(url, HttpMethod.DELETE, null, Map.class);
     }
 
     public ResponseEntity<Map> modifierCompetition(int id, String etat, String categorie) {
@@ -64,7 +64,11 @@ public class UserManager {
         params.add("categorie", categorie);
         params.add("nom", nom);
 
-        return restTemplate.exchange(url, HttpMethod.PUT, null, Map.class, params);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+
+        return restTemplate.exchange(url, HttpMethod.PUT, entity, Map.class);
     }
 
     public ResponseEntity<Map> getCompetitions(int idCompetition) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -76,6 +77,15 @@ public class CtrlRest1 {
     public ResponseEntity<Map<String, String>> deleteCompetition(@PathVariable int id) {
         Map<String, String> rep = new HashMap<>();
 
+        // supprime toutes les participations et les votes associés à la compétition
+        String url = REST2_URL + "supprimerCompetition/" + id;
+
+        if (restTemplate.exchange(url, HttpMethod.DELETE, null, String.class).getStatusCode().isError()) {
+            rep.put("erreur", "Erreur lors de la suppression des participations et des votes");
+            return ResponseEntity.badRequest().body(rep);
+        }
+
+        // supprime la compétition
         boolean sup = competitionService.supprimerCompetition(id);
 
         if (!sup) {
@@ -84,13 +94,6 @@ public class CtrlRest1 {
         }
 
         rep.put("message", "Suppression de la compétition réussie");
-
-        // supprime toutes les participations et les votes associés à la compétition
-        String url = REST2_URL + "supprimerCompetition";
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("idCompetition", Integer.toString(id));
-
-        restTemplate.delete(url, params);
 
         return ResponseEntity.ok(rep);
     }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -41,9 +42,10 @@ public class VoteService {
             Map responseBody2 = response2.getBody();
             List responseList1 = (List) responseBody2.get("data");
             if (responseBody1.get("data") != null && responseList1.size() == 2) {
-                // Les votes sont autorisés uniquement lors de l'état "votation" d'une compétition
-                String etat = ((Map<String, String>) responseBody1.get("data")).get("etat");
-                if (etat.toLowerCase() == "votation") {
+                // Les votes sont autorisés uniquement lors de l'état "votation" d'une
+                // compétition
+                String etat = ((Map<String, String>) responseBody1.get("data")).get("etat").toLowerCase();
+                if ("votation".equals(etat)) {
                     VoteId newVoteId = new VoteId();
                     newVoteId.setPfkCompetition(idCompetition);
                     newVoteId.setPfkUserVoteur(idUtilisateur);
@@ -54,8 +56,8 @@ public class VoteService {
                     voteRepository.save(newVote);
 
                     return true;
-                }              
-            } 
+                }
+            }
         }
         return false;
     }
@@ -73,6 +75,7 @@ public class VoteService {
         return voteDTOs;
     }
 
+    @Transactional
     public boolean supprimerVotesParCompetition(int idCompetition) {
         try {
             voteRepository.deleteById_PfkCompetition(idCompetition);
