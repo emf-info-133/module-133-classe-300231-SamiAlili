@@ -39,21 +39,24 @@ public class ParticipationService {
         ResponseEntity<Map> response1 = restTemplate.getForEntity(url1, Map.class);
         ResponseEntity<Map> response2 = restTemplate.getForEntity(url2, Map.class);
 
-
         if (response1.getStatusCode().is2xxSuccessful() && response2.getStatusCode().is2xxSuccessful()) {
             Map responseBody1 = response1.getBody();
             Map responseBody2 = response2.getBody();
             if (responseBody1.get("data") != null && responseBody2.get("data") != null) {
+                // Les inscriptions sont autorisés uniquement lors de l'état "inscription" d'une
+                // compétition
+                String etat = ((Map<String, String>) responseBody1.get("data")).get("etat");
+                if (etat.toLowerCase() == "inscription") {
+                    ParticipationId newParticipationId = new ParticipationId();
+                    newParticipationId.setPfkUtilisateur(idUtilisateur);
+                    newParticipationId.setPfkCompetition(idCompetition);
 
-                ParticipationId newParticipationId = new ParticipationId();
-                newParticipationId.setPfkUtilisateur(idUtilisateur);
-                newParticipationId.setPfkCompetition(idCompetition);
+                    Participation newParticipation = new Participation();
+                    newParticipation.setId(newParticipationId);
+                    participationRepository.save(newParticipation);
 
-                Participation newParticipation = new Participation();
-                newParticipation.setId(newParticipationId);
-                participationRepository.save(newParticipation);
-
-                return true;
+                    return true;
+                }
             }
         }
         return false;
