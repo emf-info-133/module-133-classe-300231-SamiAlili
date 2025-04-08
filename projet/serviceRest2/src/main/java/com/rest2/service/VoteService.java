@@ -43,8 +43,8 @@ public class VoteService {
             Map responseBody2 = response2.getBody();
             List responseList1 = (List) responseBody2.get("data");
             if (responseBody1.get("data") != null && responseList1.size() == 2) {
-                // Les votes sont autorisés uniquement lors de l'état "votation" d'une
-                // compétition
+                /* Les votes sont autorisés uniquement lors de l'état "votation" d'une
+                compétition */
                 String etat = ((Map<String, String>) responseBody1.get("data")).get("etat").toLowerCase();
                 if ("votation".equals(etat)) {
                     VoteId newVoteId = new VoteId();
