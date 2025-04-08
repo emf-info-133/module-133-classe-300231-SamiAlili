@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-import com.rest2.model.Participation;
 import com.rest2.repository.ParticipationRepository;
 import com.rest2.repository.VoteRepository;
 import com.rest2.service.ParticipationService;
@@ -26,12 +25,12 @@ public class Rest2Application {
 	}
 
 	@Bean
-	public VoteService voteService(VoteRepository voteRepository) {
-		return new VoteService(voteRepository);
+	public VoteService voteService(VoteRepository voteRepository, RestTemplate restTemplate) {
+		return new VoteService(voteRepository, restTemplate);
 	}
 
 	@Bean
 	public ParticipationService participationService(ParticipationRepository participationRepository, RestTemplate restTemplate) {
-		return new ParticipationService(participationRepository, restTemplate());
+		return new ParticipationService(participationRepository, restTemplate);
 	}
 }
