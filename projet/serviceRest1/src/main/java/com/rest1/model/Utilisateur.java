@@ -19,7 +19,7 @@ public class Utilisateur {
     private String nomUtilisateur;
     @Column(name = "mdp", length = 100)
     private String mdp;
-    @Column(name = "admin")
+    @Column(name = "admin", columnDefinition = "BOOLEAN DEFAULT 0")
     private boolean admin;
 
     public Integer getId() {

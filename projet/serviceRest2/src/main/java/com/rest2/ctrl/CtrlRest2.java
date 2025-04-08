@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -88,8 +89,8 @@ public class CtrlRest2 {
         }
     }
 
-    @DeleteMapping("/supprimerCompetition")
-    public ResponseEntity<Map<String, String>> supprimerCompetition(@RequestParam int idCompetition) {
+    @DeleteMapping("/supprimerCompetition/{idCompetition}")
+    public ResponseEntity<Map<String, String>> supprimerCompetition(@PathVariable int idCompetition) {
         Map<String, String> res = new HashMap<>();
 
         // Supprimer toutes les participations liées à la compétition

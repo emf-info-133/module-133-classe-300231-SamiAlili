@@ -18,6 +18,7 @@ import com.gw.manager.CompetitionManager;
 import com.gw.manager.UserManager;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/gw")
@@ -50,7 +51,7 @@ public class Douanier {
 
     @DeleteMapping("/supprimerCompetition/{id}")
     public ResponseEntity<Map> supprimerCompetition(HttpSession session, @PathVariable int id) {
-        if (session.getAttribute("user_type") == "admin") {
+        if (session.getAttribute("user_type") != "admin") {
             Map<String, Object> rep = Map.of("error", "Vous n'avez pas les permissions de supprimer une compétition");
             return ResponseEntity.badRequest().body(rep);
         }
@@ -152,6 +153,13 @@ public class Douanier {
         }
 
         return competitionManager.desinscrire(idUtilisateur, idCompetition);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpSession session) {
+        session.invalidate();
+
+        return ResponseEntity.ok(Map.of("message", "Déconnexion réussie"));
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -38,7 +39,6 @@ public class ParticipationService {
 
         ResponseEntity<Map> response1 = restTemplate.getForEntity(url1, Map.class);
         ResponseEntity<Map> response2 = restTemplate.getForEntity(url2, Map.class);
-
 
         if (response1.getStatusCode().is2xxSuccessful() && response2.getStatusCode().is2xxSuccessful()) {
             Map responseBody1 = response1.getBody();
@@ -101,6 +101,7 @@ public class ParticipationService {
         return participationDTOs;
     }
 
+    @Transactional
     public boolean supprimerParticipationsParCompetition(int idCompetition) {
         try {
             participationRepository.deleteById_PfkCompetition(idCompetition);
