@@ -21,6 +21,16 @@ function connect(username, passwd, successCallback, errorCallback) {
     });
 }
 
+function getCompetitions(successCallback, errorCallback) {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: BASE_URL + "getCompetitions",
+        success: successCallback,
+        error: errorCallback,
+    });
+}
+
 /**
  *
  * @param {*} username
