@@ -18,7 +18,6 @@ import com.gw.manager.CompetitionManager;
 import com.gw.manager.UserManager;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/gw")
@@ -46,17 +45,27 @@ public class Douanier {
             return ResponseEntity.badRequest().body(rep);
         }
 
-        return userManager.ouvrirCompetition(categorie, nom);
+        ResponseEntity<Map> response = userManager.ouvrirCompetition(categorie, nom);
+
+        return ResponseEntity
+                .status(response.getStatusCode()) // Conserve le statut HTTP
+                .headers(response.getHeaders()) // Conserve les headers
+                .body(response.getBody());
     }
 
     @DeleteMapping("/supprimerCompetition/{id}")
     public ResponseEntity<Map> supprimerCompetition(HttpSession session, @PathVariable int id) {
-        if (session.getAttribute("user_type") != "admin") {
+        if (!"admin".equals(session.getAttribute("user_type"))) {
             Map<String, Object> rep = Map.of("error", "Vous n'avez pas les permissions de supprimer une compétition");
             return ResponseEntity.badRequest().body(rep);
         }
 
-        return userManager.supprimerCompetition(id);
+        ResponseEntity<Map> response = userManager.supprimerCompetition(id);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @PutMapping("/modifierCompetition/{id}")
@@ -68,13 +77,24 @@ public class Douanier {
             return ResponseEntity.badRequest().body(rep);
         }
 
-        return userManager.modifierCompetition(id, etat, categorie, nom);
+        ResponseEntity<Map> response = userManager.modifierCompetition(id, etat, categorie, nom);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @GetMapping("/getCompetitions")
     public ResponseEntity<Map> getCompetitions(
             @RequestParam(name = "idCompetition", defaultValue = "-1") int idCompetition) {
-        return userManager.getCompetitions(idCompetition);
+
+        ResponseEntity<Map> response = userManager.getCompetitions(idCompetition);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @PostMapping("/login")
@@ -83,34 +103,49 @@ public class Douanier {
         ResponseEntity<Map> response = userManager.login(nomUtilisateur, mdp);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-
             Map reponseDTO = response.getBody();
-
             boolean admin = (boolean) reponseDTO.get("admin");
-
             session.setAttribute("user_type", admin ? "admin" : "user");
 
             Map utilisateur = (Map) reponseDTO.get("utilisateur");
             session.setAttribute("user_id", utilisateur.get("id"));
         }
 
-        return response;
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @PostMapping("/signIn")
     public ResponseEntity<Map> signIn(@RequestParam(name = "nom_utilisateur") String nomUtilisateur,
             @RequestParam String mdp) {
-        return userManager.signIn(nomUtilisateur, mdp);
+
+        ResponseEntity<Map> response = userManager.signIn(nomUtilisateur, mdp);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @GetMapping("/getUtilisateurs")
     public ResponseEntity<Map> getUtilisateurs(@RequestParam(required = false) List<Integer> id) {
-        return userManager.getUtilisateurs(id);
+
+        ResponseEntity<Map> response = userManager.getUtilisateurs(id);
+
+        return response;
     }
 
     @GetMapping("/getVotes")
     public ResponseEntity<String> getVotes(@RequestParam int idReceveur, @RequestParam int idCompetition) {
-        return competitionManager.getVotes(idReceveur, idCompetition);
+
+        ResponseEntity<String> response = competitionManager.getVotes(idReceveur, idCompetition);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @PostMapping("/voter")
@@ -123,12 +158,23 @@ public class Douanier {
 
         int idVoteur = (int) session.getAttribute("user_id");
 
-        return competitionManager.voter(idCompetition, idVoteur, idReceveur);
+        ResponseEntity<Map> response = competitionManager.voter(idCompetition, idVoteur, idReceveur);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @GetMapping("/getParticipations")
     public ResponseEntity<String> getParticipations(@RequestParam int idCompetition) {
-        return competitionManager.getParticipations(idCompetition);
+
+        ResponseEntity<String> response = competitionManager.getParticipations(idCompetition);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @PostMapping("/participer")
@@ -141,25 +187,38 @@ public class Douanier {
 
         int idUtilisateur = (int) session.getAttribute("user_id");
 
-        return competitionManager.participerACompetition(idUtilisateur, idCompetition);
+        ResponseEntity<String> response = competitionManager.participerACompetition(idUtilisateur, idCompetition);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @DeleteMapping("/desinscrire")
     public ResponseEntity<String> desinscrire(HttpSession session, @RequestParam int idUtilisateur,
             @RequestParam int idCompetition) {
 
-        if ((int) session.getAttribute("user_id") != idUtilisateur || session.getAttribute("user_type") != "admin") {
+        if ((int) session.getAttribute("user_id") != idUtilisateur
+                || !"admin".equals(session.getAttribute("user_type"))) {
             return ResponseEntity.badRequest().body("Vous devez vous connecter");
         }
 
-        return competitionManager.desinscrire(idUtilisateur, idCompetition);
+        ResponseEntity<String> response = competitionManager.desinscrire(idUtilisateur, idCompetition);
+
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .headers(response.getHeaders())
+                .body(response.getBody());
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(HttpSession session) {
         session.invalidate();
 
-        return ResponseEntity.ok(Map.of("message", "Déconnexion réussie"));
+        Map<String, String> response = Map.of("message", "Déconnexion réussie");
+
+        return ResponseEntity.ok(response);
     }
 
 }

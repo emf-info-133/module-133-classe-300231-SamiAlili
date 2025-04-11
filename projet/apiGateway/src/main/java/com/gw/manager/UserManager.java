@@ -120,6 +120,6 @@ public class UserManager {
                 .queryParams(params)
                 .toUriString();
 
-        return restTemplate.getForEntity(urlFinal, Map.class, params);
+        return restTemplate.getForEntity(urlFinal, Map.class);
     }
 }
