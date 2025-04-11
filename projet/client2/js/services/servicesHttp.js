@@ -5,20 +5,18 @@
  * @version 1.0 / 13-SEP-2013
  */
 
-var BASE_URL = "../server/";
+var BASE_URL = "https://localhost:8080/gw/";
 
-/**
- * Fonction permettant de charger les données d'équipe.
- * @param {type} teamid, id de l'équipe dans laquelle trouver les joueurs
- * @param {type} Fonction de callback lors du retour avec succès de l'appel.
- * @param {type} Fonction de callback en cas d'erreur.
- */
 function connect(username, passwd, successCallback, errorCallback) {
+  console.log("test");
   $.ajax({
     type: "POST",
     dataType: "json",
-    url: BASE_URL + "loginManager.php",
-    data: 'action=connect&username=' + username + '&password=' + passwd,
+    url: BASE_URL + "login",
+    data: {
+      nom_utilisateur: username,
+      mdp: passwd
+    },
     success: successCallback,
     error: errorCallback
   });

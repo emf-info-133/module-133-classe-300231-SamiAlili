@@ -21,7 +21,8 @@ class LoginCtrl {
      * @param {*} jqXHR 
      */
     connectSuccess(data, text, jqXHR) {
-        if (data.res === 'true') {
+        console.log("test2");
+        if (data.utilisateur.id != null) {
             indexCtrl.chargerVueUser();
         }
         else {

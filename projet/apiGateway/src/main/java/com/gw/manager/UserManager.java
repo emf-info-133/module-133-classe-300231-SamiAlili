@@ -15,13 +15,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 public class UserManager {
 
-    private static final String USER_SERVICE_URL = System.getenv().getOrDefault("REST1_SERVICE_URL",
-            "http://localhost:8081/rest1/");
+    private final String USER_SERVICE_URL;
 
     private final RestTemplate restTemplate;
 
     public UserManager(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+
+        USER_SERVICE_URL = System.getenv().getOrDefault("REST1_SERVICE_URL", "http://localhost:8081/rest1/");
     }
 
     public ResponseEntity<Map> ouvrirCompetition(String categorie) {

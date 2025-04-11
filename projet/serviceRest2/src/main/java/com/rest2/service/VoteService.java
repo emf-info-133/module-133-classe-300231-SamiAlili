@@ -15,14 +15,15 @@ import com.rest2.model.VoteId;
 import com.rest2.repository.VoteRepository;
 
 public class VoteService {
-    private static final String REST1_URL = System.getenv().getOrDefault("REST1_SERVICE_URL",
-            "http://localhost:8081/rest1/");
+    private final String REST1_URL;
     private final VoteRepository voteRepository;
     private final RestTemplate restTemplate;
 
     public VoteService(VoteRepository voteRepository, RestTemplate restTemplate) {
         this.voteRepository = voteRepository;
         this.restTemplate = restTemplate;
+
+        REST1_URL = System.getenv().getOrDefault("REST1_SERVICE_URL", "http://localhost:8081/rest1/");
     }
 
     public boolean voter(int idCompetition, int idUtilisateur, int idReceveur) {

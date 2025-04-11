@@ -11,13 +11,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 public class CompetitionManager {
 
-    private static final String COMPETITION_SERVICE_URL = System.getenv().getOrDefault("REST2_SERVICE_URL",
-            "http://localhost:8082/rest2/");
+    private final String COMPETITION_SERVICE_URL;
 
     private final RestTemplate restTemplate;
 
     public CompetitionManager(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+
+        COMPETITION_SERVICE_URL = System.getenv().getOrDefault("REST2_SERVICE_URL", "http://localhost:8082/rest2/");
     }
 
     public ResponseEntity<String> getVotes(int idReceveur, int idCompetition) {

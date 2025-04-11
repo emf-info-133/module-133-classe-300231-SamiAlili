@@ -18,14 +18,15 @@ import com.rest2.repository.ParticipationRepository;
 @Service
 public class ParticipationService {
 
-    private static final String REST1_URL = System.getenv().getOrDefault("REST1_SERVICE_URL",
-            "http://localhost:8081/rest1/");
+    private final String REST1_URL;
     private final ParticipationRepository participationRepository;
     private final RestTemplate restTemplate;
 
     public ParticipationService(ParticipationRepository participationRepository, RestTemplate restTemplate) {
         this.participationRepository = participationRepository;
         this.restTemplate = restTemplate;
+
+        REST1_URL = System.getenv().getOrDefault("REST1_SERVICE_URL", "http://localhost:8081/rest1/");
     }
 
     public boolean participer(int idUtilisateur, int idCompetition) {
