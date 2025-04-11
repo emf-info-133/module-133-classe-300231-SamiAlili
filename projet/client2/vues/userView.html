@@ -1,171 +1,69 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Compétitions</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div id="divUserPanel">
-  <input type="button" id="btnLogOut" value="Se déconnecter">
 
-  <div class="competitions-section">
-    <div class="competitions-title">Compétitions</div>
-    <div class="competitions-list">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des Compétitions</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="divUserPanel">
+    <input type="button" id="btnLogOut" value="Se déconnecter">
+
+    <div class="competitions-section">
+      <div class="competitions-title">Compétitions</div>
+      <div class="competitions-list">
         <!-- Liste des compétitions -->
         <div class="competition-item" data-competition="Ligue 1">Ligue 1</div>
         <div class="competition-item" data-competition="Premier League">Premier League</div>
         <!-- ... autres compétitions ... -->
-    </div>
-  </div>
-
-  <!-- Section détails compétition -->
-  <div id="competition-details" class="competition-details-section">
-  <div id="competition-name">Nom de la compétition</div>
-    <div class="competition-header">
-      <div class="competition-info">
-        <span class="info-label">État:</span>
-        <span id="competition-state">XXX</span>
       </div>
-      <div class="competition-info">
-        <span class="info-label">Catégorie:</span>
-        <span id="competition-category">XXX</span>
+
+    </div>
+
+    <!-- Section détails compétition -->
+    <div id="competition-details" class="competition-details-section">
+      <div id="competition-name">Nom de la compétition</div>
+      <div class="competition-header">
+        <div class="competition-info">
+          <span class="info-label">État:</span>
+          <span id="competition-state">XXX</span>
+        </div>
+        <div class="competition-info">
+          <span class="info-label">Catégorie:</span>
+          <span id="competition-category">XXX</span>
+        </div>
       </div>
-    </div>
-    
-    <div class="participants-title">Participants</div>
-    <div class="participants-list">
-      <!-- Contenu dynamique -->
-    </div>
-  </div>
 
-  <!-- Nouvelle section détails participant -->
-  <div id="participant-details" class="participant-details-section">
-  <div id="participant-title">Participant</div>
-    <div class="participant-header">
-      <div class="participant-info">
-        <span class="info-label">Nom:</span>
-        <span id="participant-name">XXX</span>
+      <div class="participants-title">Participants</div>
+      <div class="participants-list">
+        <!-- Contenu dynamique -->
       </div>
-      <div class="participant-info">
-        <span class="info-label">Votes:</span>
-        <span id="participant-votes">XXX</span>
+      <button id="btn-participer">Participer à la compétition</button>
+    </div>
+
+    <!-- Nouvelle section détails participant -->
+    <div id="participant-details" class="participant-details-section">
+      <div id="participant-title">Participant</div>
+      <div class="participant-header">
+        <div class="participant-info">
+          <span class="info-label">Nom:</span>
+          <span id="participant-name">XXX</span>
+        </div>
+        <div class="participant-info">
+          <span class="info-label">Votes:</span>
+          <span id="participant-votes">XXX</span>
+        </div>
       </div>
+
+      <div class="voters-title">Votants</div>
+      <div class="voters-list">
+        <!-- Contenu dynamique -->
+      </div>
+      <button id="btn-voter">Voter pour ce participant</button>
     </div>
-    
-    <div class="voters-title">Votants</div>
-    <div class="voters-list">
-      <!-- Contenu dynamique -->
-    </div>
-  </div>
-
-
-
-<script src="script.js"></script>
 </body>
+
 </html>
-
-
-
-
-<!-- CODE JS POUR USERVIEW
-  document.addEventListener('DOMContentLoaded', function() {
-    // Gestion de la déconnexion
-    document.getElementById('btnLogOut').addEventListener('click', function() {
-        window.userCtrl.logout();
-    });
-
-    // Gestion des clics sur les compétitions
-    const competitionItems = document.querySelectorAll('.competition-item');
-    competitionItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const competitionName = this.getAttribute('data-competition');
-            showCompetitionDetails(competitionName);
-        });
-    });
-
-    // Fonction pour afficher les détails
-    function showCompetitionDetails(competitionName) {
-        // Affiche la section compétition et cache la section participant
-        document.getElementById('competition-details').style.display = 'block';
-        document.getElementById('participant-details').style.display = 'none';
-        
-        document.getElementById('competition-name').textContent = competitionName;
-        
-        // Simulation de données
-        const states = ["En cours", "Terminée", "À venir"];
-        const categories = ["Professionnel", "Amateur", "Jeunesse"];
-        
-        document.getElementById('competition-state').textContent = 
-            states[Math.floor(Math.random() * states.length)];
-        document.getElementById('competition-category').textContent = 
-            categories[Math.floor(Math.random() * categories.length)];
-        
-        // Génération de participants fictifs
-        const participants = generateParticipants(competitionName);
-        const participantsList = document.querySelector('.participants-list');
-        participantsList.innerHTML = '';
-        
-        participants.forEach(participant => {
-            const div = document.createElement('div');
-            div.className = 'participant-item';
-            div.textContent = participant;
-            div.addEventListener('click', function(e) {
-                e.stopPropagation();
-                showParticipantDetails(participant);
-            });
-            participantsList.appendChild(div);
-        });
-    }
-
-    // Fonction pour afficher les détails d'un participant
-    function showParticipantDetails(participantName) {
-        const participantSection = document.getElementById('participant-details');
-        participantSection.style.display = 'block';
-        
-        document.getElementById('participant-name').textContent = participantName;
-        document.getElementById('participant-votes').textContent = 
-            Math.floor(Math.random() * 100); // Nombre aléatoire de votes
-            
-        // Génération de votants fictifs
-        const voters = generateVoters(participantName);
-        const votersList = document.querySelector('.voters-list');
-        votersList.innerHTML = '';
-        
-        voters.forEach(voter => {
-            const div = document.createElement('div');
-            div.className = 'voter-item';
-            div.textContent = voter;
-            votersList.appendChild(div);
-        });
-    }
-
-    // Génère des participants selon la compétition
-    function generateParticipants(competition) {
-        const teams = {
-            'Ligue 1': ["PSG", "OM", "Lyon", "Lille", "Monaco", "Rennes", "Nice", "Reims"],
-            'Premier League': ["Arsenal", "Chelsea", "Liverpool", "Man City", "Man Utd", "Tottenham"],
-            // ... autres compétitions
-        };
-        return teams[competition] || ["Participant 1", "Participant 2", "Participant 3"];
-    }
-
-    // Génère des votants fictifs
-    function generateVoters(participant) {
-        const firstNames = ["Jean", "Marie", "Pierre", "Sophie", "Luc", "Anne", "Paul", "Julie"];
-        const lastNames = ["Dupont", "Martin", "Bernard", "Petit", "Durand", "Leroy", "Moreau"];
-        
-        const voters = [];
-        const count = Math.floor(Math.random() * 10) + 3; // Entre 3 et 12 votants
-        
-        for (let i = 0; i < count; i++) {
-            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-            voters.push(`${firstName} ${lastName}`);
-        }
-        
-        return voters;
-    }
-});
--->

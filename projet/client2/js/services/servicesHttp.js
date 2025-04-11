@@ -8,7 +8,6 @@
 var BASE_URL = "http://localhost:8080/gw/";
 
 function connect(username, passwd, successCallback, errorCallback) {
-    console.log("test");
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -29,12 +28,15 @@ function connect(username, passwd, successCallback, errorCallback) {
  * @param {*} successCallback
  * @param {*} errorCallback
  */
-function signin(username, passwd, successCallback, errorCallback) {
+function signIn(username, passwd, successCallback, errorCallback) {
     $.ajax({
         type: "POST",
         dataType: "json",
-        url: BASE_URL + "loginManager.php",
-        data: "action=signin&username=" + username + "&password=" + passwd,
+        url: BASE_URL + "signIn",
+        data: {
+            nom_utilisateur: username,
+            mdp: passwd,
+        },
         success: successCallback,
         error: errorCallback,
     });

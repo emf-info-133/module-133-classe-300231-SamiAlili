@@ -21,8 +21,7 @@ class LoginCtrl {
      * @param {*} jqXHR 
      */
     connectSuccess(data, text, jqXHR) {
-        console.log("test2");
-        if (data.utilisateur.id != null) {
+        if (!data.admin) {
             indexCtrl.chargerVueUser();
         }
         else {
@@ -38,7 +37,7 @@ class LoginCtrl {
         var username = document.getElementById("txtUsername").value;
         var password = document.getElementById("txtPassword").value;
         if (this.valideInputs(username, password)) {
-            signin(username, password, this.registerSuccess, this.CallbackError);
+            signIn(username, password, this.registerSuccess, this.CallbackError);
         }
         else {
             alert("Un nom d'utilisateur et un mot de passe de minimum 3 caractères sont requis !");
@@ -53,12 +52,7 @@ class LoginCtrl {
      * @param {*} jqXHR 
      */
     registerSuccess(data, text, jqXHR) {
-        if (data.res == 'true') {
-            alert("Register ok");
-        }
-        else {
-            alert("Erreur lors de l'enregistrement");
-        }
+        alert(data.message);
     }
 
     /**
