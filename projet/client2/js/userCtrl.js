@@ -8,6 +8,8 @@ class UserCtrl {
             this.getCompetitionsError
         );
 
+        $("#btn-participer").click(this.participer);
+        $("#btn-voter").click(this.voter);
     }
 
     getCompetitionsSuccess(data, text, jqXHR) {
@@ -36,8 +38,8 @@ class UserCtrl {
 
         $("#competition-name").text(competition.nom);
         $("#competition-name").attr("pk_competition", competition.id);
-        $("#competition-etat").val(competition.etat);
-        $("#competition-category").val(competition.categorie);
+        $("#competition-etat").text(competition.etat);
+        $("#competition-category").text(competition.categorie);
 
         let participants = competition.participants;
 
@@ -60,6 +62,8 @@ class UserCtrl {
 
         $("#participant-name").text(participant.nom);
         $("#participant-votes").text(participant.votes);
+        
+        $("#participant-name").attr("pk_participant", participant.id);
 
         let voters = participant.votants;
 
@@ -73,5 +77,32 @@ class UserCtrl {
 
             $(".voters-list").append(divVoter);
         });
+    }
+
+    participer() {
+        let pkCompetition = $("#competition-name").attr("pk_competition");
+        participer(pkCompetition, this.participerSuccess, this.participerError);
+    }
+
+    participerSuccess(data, text, jqXHR) {
+        indexCtrl.chargerVueUser();
+    }
+
+    participerError(jqXHR, textStatus, errorThrown) {
+        alert("Erreur lors de la participation : " + textStatus);
+    }
+
+    voter() {
+        let pkCompetition = $("#competition-name").attr("pk_competition");
+        let pkReceveur = $("#participant-name").attr("pk_participant");
+        voter(pkCompetition, pkReceveur, this.voterSuccess, this.voterrError)
+    }
+
+    voterSuccess(data, text, jqXHR) {
+        indexCtrl.chargerVueUser();
+    }
+
+    voterrError(jqXHR, textStatus, errorThrown) {
+        alert("Erreur lors de la votation : " + textStatus);
     }
 }

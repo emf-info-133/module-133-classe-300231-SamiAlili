@@ -38,7 +38,7 @@ public class CtrlRest2 {
     public ResponseEntity<Map<String, Object>> getVotes(@RequestParam int idReceveur, @RequestParam int idCompetition) {
         Map<String, Object> res = new HashMap<>();
         res.put("data", voteService.getVotes(idReceveur, idCompetition));
-        return ResponseEntity.ok(res);
+        return ResponseEntity.badRequest().body(res);
     }
 
     @PostMapping("/voter")
@@ -51,7 +51,7 @@ public class CtrlRest2 {
             return ResponseEntity.ok(res);
         } else {
             res.put("erreur", "Erreur lors du vote");
-            return ResponseEntity.ok(res);
+            return ResponseEntity.badRequest().body(res);
         }
     }
 
@@ -71,7 +71,7 @@ public class CtrlRest2 {
             return ResponseEntity.ok(res);
         } else {
             res.put("erreur", "Erreur lors de la participation");
-            return ResponseEntity.ok(res);
+            return ResponseEntity.badRequest().body(res);
         }
 
     }
@@ -85,7 +85,7 @@ public class CtrlRest2 {
             return ResponseEntity.ok(res);
         } else {
             res.put("erreur", "Erreur lors de la désincription");
-            return ResponseEntity.ok(res);
+            return ResponseEntity.badRequest().body(res);
         }
     }
 

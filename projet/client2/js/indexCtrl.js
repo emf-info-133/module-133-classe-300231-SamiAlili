@@ -47,8 +47,6 @@ $().ready(function () {
    */
     chargerVueUser() {
       this.chargerVue("userView", () => new UserCtrl());
-      userCtrl.getEquipes();
-      userCtrl.obtenirListeJoueurs();
     }
   
   }

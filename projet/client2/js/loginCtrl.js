@@ -10,7 +10,7 @@ class LoginCtrl {
         //code pour le login
         var username = document.getElementById("txtUsername").value;
         var password = document.getElementById("txtPassword").value;
-        connect(username, password, this.connectSuccess, this.CallbackError)
+        connect(username, password, this.connectSuccess, this.connectError)
 
     }
 
@@ -30,6 +30,16 @@ class LoginCtrl {
     }
 
     /**
+    * Méthode appelée en cas d'erreur lors de la lecture du webservice.
+    * @param {type} data
+    * @param {type} text
+    * @param {type} jqXHR
+    */
+    connectError(request, status, error) {
+        alert("Erreur : erreur lors de la connexion !");
+    }
+
+    /**
      * Permet à l'utilisateur de créer un compte qui sera ajouté à la db. Pour créer un compte, il faut que les champs respectent des critères.
      */
     register() {
@@ -37,7 +47,7 @@ class LoginCtrl {
         var username = document.getElementById("txtUsername").value;
         var password = document.getElementById("txtPassword").value;
         if (this.valideInputs(username, password)) {
-            signIn(username, password, this.registerSuccess, this.CallbackError);
+            signIn(username, password, this.registerSuccess, this.registerError);
         }
         else {
             alert("Un nom d'utilisateur et un mot de passe de minimum 3 caractères sont requis !");
@@ -56,6 +66,16 @@ class LoginCtrl {
     }
 
     /**
+    * Méthode appelée en cas d'erreur lors de la lecture du webservice.
+    * @param {type} data
+    * @param {type} text
+    * @param {type} jqXHR
+    */
+    registerError(request, status, error) {
+        alert("Erreur : erreur lors de l'inscription !");
+    }
+
+    /**
      * Permet de tester si le nom d'utilisateur et le mot de passe respectent certaines conditions. 
      * La seule condition est qu'ils doivent contenir au minimum 3 caractères.
      * @param {*} username - le nom d'utilisateur.
@@ -69,20 +89,4 @@ class LoginCtrl {
             return true;
         }
     }
-
-
-
-
-
-
-    /**
-    * Méthode appelée en cas d'erreur lors de la lecture du webservice.
-    * @param {type} data
-    * @param {type} text
-    * @param {type} jqXHR
-    */
-    CallbackError(request, status, error) {
-        alert("erreur : " + error + ", request: " + request + ", status: " + status);
-    }
-
 }
