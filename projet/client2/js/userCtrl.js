@@ -62,11 +62,9 @@ class UserCtrl {
         $(".participant-details-section").show();
 
         $("#participant-name").text(participant.nom);
-        $("#participant-votes").text(participant.votes);
-
         $("#participant-name").attr("pk_participant", participant.id);
 
-        let voters = participant.votants;
+        let voters = participant.votes;
 
         if (Array.isArray(voters)) {
             $("#participant-votes").text(voters.length);
