@@ -12,23 +12,10 @@ function connect(username, passwd, successCallback, errorCallback) {
         type: "POST",
         dataType: "json",
         url: BASE_URL + "login",
-        xhrFields: {
-            withCredentials: true,
-        },
         data: {
             nom_utilisateur: username,
             mdp: passwd,
         },
-        success: successCallback,
-        error: errorCallback,
-    });
-}
-
-function getCompetitions(successCallback, errorCallback) {
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: BASE_URL + "getCompetitions",
         success: successCallback,
         error: errorCallback,
     });
@@ -50,6 +37,16 @@ function signIn(username, passwd, successCallback, errorCallback) {
             nom_utilisateur: username,
             mdp: passwd,
         },
+        success: successCallback,
+        error: errorCallback,
+    });
+}
+
+function getCompetitions(successCallback, errorCallback) {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: BASE_URL + "getCompetitions",
         success: successCallback,
         error: errorCallback,
     });
