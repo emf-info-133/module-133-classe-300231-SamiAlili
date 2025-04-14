@@ -53,6 +53,18 @@ class AdminCtrl {
             );
         });
 
+        $("#btnDesinscrire").click(() => {
+            let id = $("#participant-name").attr("pk_participant");
+            let idCompetition = $("#competition-name").attr("pk_competition");
+
+            desinscrireParticipant(
+                idCompetition,
+                id,
+                () => indexCtrl.chargerVueAdmin(),
+                () => alert("Erreur lors de la désinscription du participant")
+            );
+        });
+
         $("#btnLogOut").click(() => {
             logout(
                 () => indexCtrl.chargerVueLogin(),
@@ -109,6 +121,7 @@ class AdminCtrl {
         $(".participant-details-section").show();
 
         $("#participant-name").text(participant.nom);
+        $("#participant-name").attr("pk_participant", participant.id);
 
         let voters = participant.votes;
 

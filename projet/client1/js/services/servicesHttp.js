@@ -64,6 +64,28 @@ function supprimerCompetition(id, successCallback, errorCallback) {
     });
 }
 
+function desinscrireParticipant(
+    idCompetition,
+    idParticipant,
+    successCallback,
+    errorCallback
+) {
+    $.ajax({
+        type: "DELETE",
+        dataType: "json",
+        url: BASE_URL + "desinscrire",
+        xhrFields: {
+            withCredentials: true,
+        },
+        data: {
+            idUtilisateur: idParticipant,
+            idCompetition: idCompetition,
+        },
+        success: successCallback,
+        error: errorCallback,
+    });
+}
+
 /**
  *
  * @param {*} successCallback
