@@ -16,6 +16,9 @@ function login(username, passwd, successCallback, errorCallback) {
             nom_utilisateur: username,
             mdp: passwd,
         },
+        xhrFields: {
+            withCredentials: true,
+        },
         success: successCallback,
         error: errorCallback,
     });
@@ -40,6 +43,9 @@ function ouvrirCompetition(nom, categorie, successCallback, errorCallback) {
             nom: nom,
             categorie: categorie,
         },
+        xhrFields: {
+            withCredentials: true,
+        },
         success: successCallback,
         error: errorCallback,
     });
@@ -50,6 +56,9 @@ function supprimerCompetition(id, successCallback, errorCallback) {
         type: "DELETE",
         dataType: "json",
         url: BASE_URL + "supprimerCompetition/" + id,
+        xhrFields: {
+            withCredentials: true,
+        },
         success: successCallback,
         error: errorCallback,
     });
@@ -65,6 +74,9 @@ function logout(successCallback, errorCallback) {
         type: "POST",
         dataType: "json",
         url: BASE_URL + "logout",
+        xhrFields: {
+            withCredentials: true,
+        },
         success: successCallback,
         error: errorCallback,
     });
