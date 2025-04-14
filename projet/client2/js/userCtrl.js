@@ -10,6 +10,7 @@ class UserCtrl {
 
         $("#btn-participer").click(this.participer);
         $("#btn-voter").click(this.voter);
+        $("#btnLogOut").click(this.logout);
     }
 
     getCompetitionsSuccess(data, text, jqXHR) {
@@ -62,21 +63,25 @@ class UserCtrl {
 
         $("#participant-name").text(participant.nom);
         $("#participant-votes").text(participant.votes);
-        
+
         $("#participant-name").attr("pk_participant", participant.id);
 
         let voters = participant.votants;
 
-        $(".voters-list").empty();
+        if (Array.isArray(voters)) {
+            $("#participant-votes").text(voters.length);
+            $(".voters-list").empty();
+            voters.forEach((voter) => {
+                let divVoter = $("<div>");
 
-        voters.forEach((voter) => {
-            let divVoter = $("<div>");
+                divVoter.addClass("voter-item");
+                divVoter.text(voter.nom);
 
-            divVoter.addClass("voter-item");
-            divVoter.text(voter.nom);
-
-            $(".voters-list").append(divVoter);
-        });
+                $(".voters-list").append(divVoter);
+            });
+        } else {
+            $("#participant-votes").text("0");
+        }
     }
 
     participer() {
@@ -95,14 +100,26 @@ class UserCtrl {
     voter() {
         let pkCompetition = $("#competition-name").attr("pk_competition");
         let pkReceveur = $("#participant-name").attr("pk_participant");
-        voter(pkCompetition, pkReceveur, this.voterSuccess, this.voterrError)
+        voter(pkCompetition, pkReceveur, this.voterSuccess, this.voterError)
     }
 
     voterSuccess(data, text, jqXHR) {
         indexCtrl.chargerVueUser();
     }
 
-    voterrError(jqXHR, textStatus, errorThrown) {
+    voterError(jqXHR, textStatus, errorThrown) {
         alert("Erreur lors de la votation : " + textStatus);
+    }
+
+    logout() {
+        logout(this.logoutSuccess, this.logoutError)
+    }
+
+    logoutSuccess(data, text, jqXHR) {
+        indexCtrl.chargerVueLogin();
+    }
+
+    logoutError(jqXHR, textStatus, errorThrown) {
+        alert("Erreur lors de la déconnexion : " + textStatus);
     }
 }
