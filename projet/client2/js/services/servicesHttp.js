@@ -12,9 +12,6 @@ function connect(username, passwd, successCallback, errorCallback) {
         type: "POST",
         dataType: "json",
         url: BASE_URL + "login",
-        xhrFields: {
-            withCredentials: true,
-        },
         data: {
             nom_utilisateur: username,
             mdp: passwd,
