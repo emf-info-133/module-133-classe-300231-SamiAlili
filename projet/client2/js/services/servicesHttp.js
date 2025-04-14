@@ -61,7 +61,7 @@ function logout(successCallback, errorCallback) {
     $.ajax({
         type: "POST",
         dataType: "json",
-        url: BASE_URL + "lougout",
+        url: BASE_URL + "logout",
         xhrFields: {
             withCredentials: true,
         },
@@ -93,13 +93,13 @@ function participer(pkCompetition, successCallback, errorCallback) {
  * @param {*} successCallback
  * @param {*} errorCallback
  */
-function voter(pkCompetition, pkRceveur, successCallback, errorCallback) {
+function voter(pkCompetition, pkReceveur, successCallback, errorCallback) {
     $.ajax({
         type: "POST",
         dataType: "json",
         data: {
             idCompetition: pkCompetition,
-            idReceveur: pkRceveur,
+            idReceveur: pkReceveur,
         },
         xhrFields: {
             withCredentials: true,
