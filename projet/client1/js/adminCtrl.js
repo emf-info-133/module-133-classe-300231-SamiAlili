@@ -66,12 +66,32 @@ class AdminCtrl {
             );
         });
 
+        $("#competition-etat").change(() => this.updateCompetition());
+
+        $("#competition-category").change(() => this.updateCompetition());
+
         $("#btnLogOut").click(() => {
             logout(
                 () => indexCtrl.chargerVueLogin(),
                 () => alert("Erreur lors de la deconnexion")
             );
         });
+    }
+
+    updateCompetition() {
+        let id = $("#competition-name").attr("pk_competition");
+        let nom = $("#competition-name").text();
+        let etat = $("#competition-etat").val();
+        let categorie = $("#competition-category").val();
+
+        updateCompetition(
+            id,
+            nom,
+            etat,
+            categorie,
+            () => indexCtrl.chargerVueAdmin(),
+            () => alert("Erreur lors de la mise à jour de la competition")
+        );
     }
 
     getCompetitionsSuccess(data, text, jqXHR) {

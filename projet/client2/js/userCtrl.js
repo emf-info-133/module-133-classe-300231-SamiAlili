@@ -8,9 +8,9 @@ class UserCtrl {
             this.getCompetitionsError
         );
 
-        $("#btn-participer").click(this.participer);
-        $("#btn-voter").click(this.voter);
-        $("#btnLogOut").click(this.logout);
+        $("#btn-participer").click(() => this.participer());
+        $("#btn-voter").click(() => this.voter());
+        $("#btnLogOut").click(() => this.logout());
     }
 
     getCompetitionsSuccess(data, text, jqXHR) {
@@ -88,6 +88,7 @@ class UserCtrl {
     }
 
     participerSuccess(data, text, jqXHR) {
+        alert("Vous avez bien participé à la compétition");
         indexCtrl.chargerVueUser();
     }
 
@@ -98,10 +99,11 @@ class UserCtrl {
     voter() {
         let pkCompetition = $("#competition-name").attr("pk_competition");
         let pkReceveur = $("#participant-name").attr("pk_participant");
-        voter(pkCompetition, pkReceveur, this.voterSuccess, this.voterError)
+        voter(pkCompetition, pkReceveur, this.voterSuccess, this.voterError);
     }
 
     voterSuccess(data, text, jqXHR) {
+        alert("Vous avez bien voté pour le participant");
         indexCtrl.chargerVueUser();
     }
 
@@ -110,7 +112,7 @@ class UserCtrl {
     }
 
     logout() {
-        logout(this.logoutSuccess, this.logoutError)
+        logout(this.logoutSuccess, this.logoutError);
     }
 
     logoutSuccess(data, text, jqXHR) {

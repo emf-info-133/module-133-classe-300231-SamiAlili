@@ -51,6 +51,31 @@ function ouvrirCompetition(nom, categorie, successCallback, errorCallback) {
     });
 }
 
+function updateCompetition(
+    id,
+    nom,
+    etat,
+    categorie,
+    successCallback,
+    errorCallback
+) {
+    $.ajax({
+        xhrFields: {
+            withCredentials: true,
+        },
+        type: "PUT",
+        dataType: "json",
+        url: BASE_URL + "modifierCompetition/" + id,
+        data: {
+            nom: nom,
+            categorie: categorie,
+            etat: etat,
+        },
+        success: successCallback,
+        error: errorCallback,
+    });
+}
+
 function supprimerCompetition(id, successCallback, errorCallback) {
     $.ajax({
         type: "DELETE",
