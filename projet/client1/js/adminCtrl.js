@@ -74,7 +74,6 @@ class AdminCtrl {
         $("#competition-name").attr("pk_competition", competition.id);
         $("#competition-etat").val(competition.etat);
         $("#competition-category").val(competition.categorie);
-
         let participants = competition.participants;
 
         $(".participants-list").empty();
@@ -99,15 +98,19 @@ class AdminCtrl {
 
         let voters = participant.votants;
 
-        $(".voters-list").empty();
+        if (Array.isArray(voters)) {
+            $("#participant-votes").text(voters.length);
+            $(".voters-list").empty();
+            voters.forEach((voter) => {
+                let divVoter = $("<div>");
 
-        voters.forEach((voter) => {
-            let divVoter = $("<div>");
+                divVoter.addClass("voter-item");
+                divVoter.text(voter.nom);
 
-            divVoter.addClass("voter-item");
-            divVoter.text(voter.nom);
-
-            $(".voters-list").append(divVoter);
-        });
+                $(".voters-list").append(divVoter);
+            });
+        } else {
+            $("#participant-votes").text("0");
+        }
     }
 }
