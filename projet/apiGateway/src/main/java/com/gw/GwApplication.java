@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpResponse;
@@ -55,8 +57,9 @@ public class GwApplication {
 				registry.addMapping("/**")
 						.allowedOrigins("http://127.0.0.1:5500") // L'URL de ton frontend
 						.allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowCredentials(true)
 						.allowedHeaders("*");
 			}
 		};
-	}	
+	}
 }

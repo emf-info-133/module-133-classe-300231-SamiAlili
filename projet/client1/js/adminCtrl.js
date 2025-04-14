@@ -42,8 +42,23 @@ class AdminCtrl {
         $("#btnSupprimerCompetition").click(() => {
             let id = $("#competition-name").attr("pk_competition");
 
+            supprimerCompetition(
+                id,
+                (data) => {
+                    alert(data.message);
+                },
+                () => {
+                    alert("Erreur lors de la suppression de la competition");
+                }
+            );
+        });
 
-        })
+        $("#btnLogOut").click(() => {
+            logout(
+                () => indexCtrl.chargerVueLogin(),
+                () => alert("Erreur lors de la deconnexion")
+            );
+        });
     }
 
     getCompetitionsSuccess(data, text, jqXHR) {
@@ -94,9 +109,8 @@ class AdminCtrl {
         $(".participant-details-section").show();
 
         $("#participant-name").text(participant.nom);
-        $("#participant-votes").text(participant.votes);
 
-        let voters = participant.votants;
+        let voters = participant.votes;
 
         if (Array.isArray(voters)) {
             $("#participant-votes").text(voters.length);
