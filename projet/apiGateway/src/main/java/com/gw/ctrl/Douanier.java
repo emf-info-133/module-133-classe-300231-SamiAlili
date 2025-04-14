@@ -111,10 +111,7 @@ public class Douanier {
             session.setAttribute("user_id", utilisateur.get("id"));
         }
 
-        return ResponseEntity
-                .status(response.getStatusCode())
-                .headers(response.getHeaders())
-                .body(response.getBody());
+        return response;
     }
 
     @PostMapping("/signIn")

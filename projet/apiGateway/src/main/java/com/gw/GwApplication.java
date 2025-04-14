@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.gw.manager.CompetitionManager;
 import com.gw.manager.UserManager;
@@ -43,5 +45,18 @@ public class GwApplication {
 	@Bean
 	public CompetitionManager competitionManager(RestTemplate restTemplate) {
 		return new CompetitionManager(restTemplate);
+	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+						.allowedOrigins("http://127.0.0.1:5500") // L'URL de ton frontend
+						.allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowedHeaders("*");
+			}
+		};
 	}
 }
