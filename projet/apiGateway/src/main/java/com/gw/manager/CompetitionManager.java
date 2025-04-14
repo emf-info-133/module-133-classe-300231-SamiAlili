@@ -2,6 +2,7 @@ package com.gw.manager;
 
 import java.util.Map;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -71,7 +72,11 @@ public class CompetitionManager {
         params.add("idUtilisateur", Integer.toString(idUtilisateur));
         params.add("idCompetition", Integer.toString(idCompetition));
 
-        return restTemplate.exchange(url, HttpMethod.DELETE, null, String.class, params);
+        String urlFinal = UriComponentsBuilder.fromUriString(url)
+                .queryParams(params)
+                .toUriString();
+
+        return restTemplate.exchange(urlFinal, HttpMethod.DELETE, null, String.class);
     }
 
 }

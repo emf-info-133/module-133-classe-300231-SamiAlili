@@ -76,12 +76,12 @@ public class CtrlRest2 {
 
     }
 
-    @DeleteMapping("/désinscrire")
+    @DeleteMapping("/desinscrire")
     public ResponseEntity<Map<String, String>> desinscrire(@RequestParam int idUtilisateur,
             @RequestParam int idCompetition) {
         Map<String, String> res = new HashMap<>();
         if (participationService.desinscrire(idUtilisateur, idCompetition)) {
-            res.put("succès", "Vous vous êtes désinscrit avec succès");
+            res.put("succès", "Vous avez bien désinscrit l'utilisateur avec succès");
             return ResponseEntity.ok(res);
         } else {
             res.put("erreur", "Erreur lors de la désincription");

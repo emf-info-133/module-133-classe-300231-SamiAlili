@@ -196,8 +196,9 @@ public class Douanier {
     public ResponseEntity<String> desinscrire(HttpSession session, @RequestParam int idUtilisateur,
             @RequestParam int idCompetition) {
 
-        if ((int) session.getAttribute("user_id") != idUtilisateur
-                || !"admin".equals(session.getAttribute("user_type"))) {
+        String userType = (String) session.getAttribute("user_type");
+
+        if (!"admin".equals(userType)) {
             return ResponseEntity.badRequest().body("Vous devez vous connecter");
         }
 
