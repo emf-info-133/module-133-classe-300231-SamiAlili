@@ -38,7 +38,7 @@ public class CtrlRest2 {
     public ResponseEntity<Map<String, Object>> getVotes(@RequestParam int idReceveur, @RequestParam int idCompetition) {
         Map<String, Object> res = new HashMap<>();
         res.put("data", voteService.getVotes(idReceveur, idCompetition));
-        return ResponseEntity.badRequest().body(res);
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/voter")
