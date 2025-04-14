@@ -46,6 +46,7 @@ class AdminCtrl {
                 id,
                 (data) => {
                     alert(data.message);
+                    indexCtrl.chargerVueAdmin();
                 },
                 () => {
                     alert("Erreur lors de la suppression de la competition");

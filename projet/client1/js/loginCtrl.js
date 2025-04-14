@@ -29,13 +29,6 @@ class LoginCtrl {
     }
 
     connectError(jqXHR, textStatus, errorThrown) {
-        alert(
-            "Erreur lors de la connexion : \n- " +
-                textStatus +
-                "\n- " +
-                JSON.stringify(jqXHR) +
-                "\n- " +
-                JSON.stringify(errorThrown)
-        );
+        alert("Erreur lors de la connexion !");
     }
 }

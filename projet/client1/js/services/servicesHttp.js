@@ -9,15 +9,15 @@ var BASE_URL = "http://localhost:8080/gw/";
 
 function login(username, passwd, successCallback, errorCallback) {
     $.ajax({
+        xhrFields: {
+            withCredentials: true,
+        },
         type: "POST",
         dataType: "json",
         url: BASE_URL + "login",
         data: {
             nom_utilisateur: username,
             mdp: passwd,
-        },
-        xhrFields: {
-            withCredentials: true,
         },
         success: successCallback,
         error: errorCallback,
@@ -36,15 +36,15 @@ function getCompetitions(successCallback, errorCallback) {
 
 function ouvrirCompetition(nom, categorie, successCallback, errorCallback) {
     $.ajax({
+        xhrFields: {
+            withCredentials: true,
+        },
         type: "POST",
         dataType: "json",
         url: BASE_URL + "ouvrirCompetition",
         data: {
             nom: nom,
             categorie: categorie,
-        },
-        xhrFields: {
-            withCredentials: true,
         },
         success: successCallback,
         error: errorCallback,

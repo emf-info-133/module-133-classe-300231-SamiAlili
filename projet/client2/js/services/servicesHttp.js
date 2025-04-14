@@ -9,6 +9,9 @@ var BASE_URL = "http://localhost:8080/gw/";
 
 function connect(username, passwd, successCallback, errorCallback) {
     $.ajax({
+        xhrFields: {
+            withCredentials: true,
+        },
         type: "POST",
         dataType: "json",
         url: BASE_URL + "login",
@@ -77,6 +80,9 @@ function logout(successCallback, errorCallback) {
  */
 function participer(pkCompetition, successCallback, errorCallback) {
     $.ajax({
+        xhrFields: {
+            withCredentials: true,
+        },
         type: "POST",
         dataType: "json",
         data: {

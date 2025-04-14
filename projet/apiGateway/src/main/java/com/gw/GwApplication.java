@@ -55,7 +55,7 @@ public class GwApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://127.0.0.1:5500") // L'URL de ton frontend
+						.allowedOrigins("http://localhost:5500", "https://alilis.emf-informatique.ch")
 						.allowedMethods("GET", "POST", "PUT", "DELETE")
 						.allowCredentials(true)
 						.allowedHeaders("*");
