@@ -39,26 +39,33 @@ public class VoteService {
         ResponseEntity<Map> response2 = restTemplate.getForEntity(url2, Map.class);
 
         if (response1.getStatusCode().is2xxSuccessful() && response2.getStatusCode().is2xxSuccessful()) {
-            Map responseBody1 = response1.getBody();
-            Map responseBody2 = response2.getBody();
-            List responseList1 = (List) responseBody2.get("data");
-            if (responseBody1.get("data") != null && responseList1.size() == 2) {
-                /* Les votes sont autorisés uniquement lors de l'état "votation" d'une
-                compétition */
-                String etat = ((Map<String, String>) responseBody1.get("data")).get("etat").toLowerCase();
-                if ("votation".equals(etat)) {
-                    VoteId newVoteId = new VoteId();
-                    newVoteId.setPfkCompetition(idCompetition);
-                    newVoteId.setPfkUserVoteur(idUtilisateur);
-                    newVoteId.setPfkUserReceveur(idReceveur);
+            try {
+                Map responseBody1 = response1.getBody();
+                Map responseBody2 = response2.getBody();
+                List responseList1 = (List) responseBody2.get("data");
+                if (responseBody1.get("data") != null && responseList1.size() == 2) {
+                    /*
+                     * Les votes sont autorisés uniquement lors de l'état "votation" d'une
+                     * compétition
+                     */
+                    String etat = ((Map<String, String>) responseBody1.get("data")).get("etat").toLowerCase();
+                    if ("votation".equals(etat)) {
+                        VoteId newVoteId = new VoteId();
+                        newVoteId.setPfkCompetition(idCompetition);
+                        newVoteId.setPfkUserVoteur(idUtilisateur);
+                        newVoteId.setPfkUserReceveur(idReceveur);
 
-                    Vote newVote = new Vote();
-                    newVote.setId(newVoteId);
-                    voteRepository.save(newVote);
+                        Vote newVote = new Vote();
+                        newVote.setId(newVoteId);
+                        voteRepository.save(newVote);
 
-                    return true;
+                        return true;
+                    }
                 }
+            } catch (Exception e) {
+                return false;
             }
+
         }
         return false;
     }
