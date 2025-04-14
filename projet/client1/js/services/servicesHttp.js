@@ -7,6 +7,12 @@
 
 var BASE_URL = "http://localhost:8080/gw/";
 
+$.ajaxSetup({
+    xhrFields: {
+        withCredentials: true,
+    },
+});
+
 function login(username, passwd, successCallback, errorCallback) {
     $.ajax({
         type: "POST",

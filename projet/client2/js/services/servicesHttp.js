@@ -12,6 +12,9 @@ function connect(username, passwd, successCallback, errorCallback) {
         type: "POST",
         dataType: "json",
         url: BASE_URL + "login",
+        xhrFields: {
+            withCredentials: true,
+        },
         data: {
             nom_utilisateur: username,
             mdp: passwd,
@@ -62,6 +65,9 @@ function logout(successCallback, errorCallback) {
         type: "POST",
         dataType: "json",
         url: BASE_URL + "lougout",
+        xhrFields: {
+            withCredentials: true,
+        },
         success: successCallback,
         error: errorCallback,
     });
@@ -77,7 +83,10 @@ function participer(pkCompetition, successCallback, errorCallback) {
         type: "POST",
         dataType: "json",
         data: {
-            idCompetition: pkCompetition
+            idCompetition: pkCompetition,
+        },
+        xhrFields: {
+            withCredentials: true,
         },
         url: BASE_URL + "participer",
         success: successCallback,
@@ -90,13 +99,16 @@ function participer(pkCompetition, successCallback, errorCallback) {
  * @param {*} successCallback
  * @param {*} errorCallback
  */
-function voter(pkCompetition, pkRceveur,successCallback, errorCallback) {
+function voter(pkCompetition, pkRceveur, successCallback, errorCallback) {
     $.ajax({
         type: "POST",
         dataType: "json",
         data: {
             idCompetition: pkCompetition,
-            idReceveur: pkRceveur
+            idReceveur: pkRceveur,
+        },
+        xhrFields: {
+            withCredentials: true,
         },
         url: BASE_URL + "voter",
         success: successCallback,
