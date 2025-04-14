@@ -82,9 +82,6 @@ function participer(pkCompetition, successCallback, errorCallback) {
         data: {
             idCompetition: pkCompetition,
         },
-        xhrFields: {
-            withCredentials: true,
-        },
         url: BASE_URL + "participer",
         success: successCallback,
         error: errorCallback,

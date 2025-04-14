@@ -105,7 +105,7 @@ body {
 
 .competition-details-section,
 .participant-details-section {
-    /*display: none;*/
+    display: none;
     margin-left: 10px;
     flex-direction: column;
     height: calc(100vh - 70px); /* Ajustement pour le header */
