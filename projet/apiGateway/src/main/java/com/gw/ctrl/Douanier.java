@@ -87,7 +87,7 @@ public class Douanier {
 
     @GetMapping("/getCompetitions")
     public ResponseEntity<Map> getCompetitions(
-            @RequestParam(name = "idCompetition", defaultValue = "-1") int idCompetition) {
+            @RequestParam(defaultValue = "-1") int idCompetition) {
 
         ResponseEntity<Map> response = userManager.getCompetitions(idCompetition);
 

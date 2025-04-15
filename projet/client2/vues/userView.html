@@ -1,70 +1,62 @@
 <!DOCTYPE html>
-<html lang="fr">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestion des Compétitions</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
+<!-- 
+But :    Page HTML qui permet a l'utilisateur de voir les participations
+Auteur : Matteo Marinazzo
+Date :   07.04.2025  / V1.0 
+-->
 
 <header class="page-header">
-  <h1>Grand prix Patek Philippe & Rolex de l'horlogerie - édition 2025</h1>
+    <h1>Grand prix Patek Philippe & Rolex de l'horlogerie - édition 2025</h1>
 </header>
 
-<body>
-  <div id="divUserPanel">
+<div id="divUserPanel">
     <button id="btnLogOut">Se déconnecter</button>
 
     <div class="competitions-section">
-      <div class="competitions-title">Compétitions</div>
-      <div class="competitions-list">
-      </div>
-
+        <div class="competitions-title">Compétitions</div>
+        <div class="competitions-list"></div>
     </div>
 
     <!-- Section détails compétition -->
     <div id="competition-details" class="competition-details-section">
-      <div id="competition-name">Nom de la compétition</div>
-      <div class="competition-header">
-        <div class="competition-info">
-          <span class="info-label">État:</span>
-          <span id="competition-etat">XXX</span>
+        <div id="competition-name">Nom de la compétition</div>
+        <div class="competition-header">
+            <div class="competition-info">
+                <span class="info-label">État:</span>
+                <span id="competition-etat">XXX</span>
+            </div>
+            <div class="competition-info">
+                <span class="info-label">Catégorie:</span>
+                <span id="competition-category">XXX</span>
+            </div>
         </div>
-        <div class="competition-info">
-          <span class="info-label">Catégorie:</span>
-          <span id="competition-category">XXX</span>
-        </div>
-      </div>
 
-      <div class="participants-title">Participants</div>
-      <div class="participants-list">
-        <!-- Contenu dynamique -->
-        
-      </div>
-      <button id="btn-participer">Participer à la compétition</button>
+        <div class="participants-title">Participants</div>
+        <div class="participants-list">
+            <!-- Contenu dynamique -->
+        </div>
+        <button id="btn-participer">Participer à la compétition</button>
     </div>
 
     <!-- Nouvelle section détails participant -->
     <div id="participant-details" class="participant-details-section">
-      <div id="participant-title">Participant</div>
-      <div class="participant-header">
-        <div class="participant-info">
-          <span class="info-label">Nom:</span>
-          <span id="participant-name">XXX</span>
+        <div id="participant-title">Participant</div>
+        <div class="participant-header">
+            <div class="participant-info">
+                <span class="info-label">Nom:</span>
+                <span id="participant-name">XXX</span>
+            </div>
+            <div class="participant-info">
+                <span class="info-label">Votes:</span>
+                <span id="participant-votes">XXX</span>
+            </div>
         </div>
-        <div class="participant-info">
-          <span class="info-label">Votes:</span>
-          <span id="participant-votes">XXX</span>
-        </div>
-      </div>
 
-      <div class="voters-title">Votants</div>
-      <div class="voters-list">
-        <!-- Contenu dynamique -->
-      </div>
-      <button id="btn-voter">Voter pour ce participant</button>
+        <div class="voters-title">Votants</div>
+        <div class="voters-list">
+            <!-- Contenu dynamique -->
+        </div>
+        <button id="btn-voter">Voter pour ce participant</button>
     </div>
-</body>
-
-</html>
+</div>

@@ -1,87 +1,87 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Compétitions</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+
+<!-- 
+But :    Page HTML qui permet à l'admin pour géré les competitions, ...
+Auteur : Sami Alili
+Date :   07.04.2025  / V1.0 
+-->
 
 <header class="page-header">
-  <h1>Grand prix Patek Philippe & Rolex de l'horlogerie - édition 2025</h1>
+    <h1>Grand prix Patek Philippe & Rolex de l'horlogerie - édition 2025</h1>
 </header>
 
-<body>
 <div id="divUserPanel">
     <button id="btnLogOut">Se déconnecter</button>
 
-  <div class="competitions-section">
-    <div class="competitions-title">Compétitions</div>
-    <div class="competitions-list">
-        <!-- Liste des compétitions -->
-        <div class="competition-item" data-competition="Ligue 1">Ligue 1</div>
-        <div class="competition-item" data-competition="Premier League">Premier League</div>
-        <!-- ... autres compétitions ... -->
+    <div class="competitions-section">
+        <div class="competitions-title">Compétitions</div>
+        <div class="competitions-list">
+            <!-- Liste des compétitions -->
+            <div class="competition-item" data-competition="Ligue 1">
+                Ligue 1
+            </div>
+            <div class="competition-item" data-competition="Premier League">
+                Premier League
+            </div>
+            <!-- ... autres compétitions ... -->
+        </div>
+
+        <button type="button" id="btnAjoutCompetition">
+            Ouvrir une compétition
+        </button>
     </div>
 
-    <button type="button" id="btnAjoutCompetition">Ouvrir une compétition</button>
-  </div>
+    <!-- Section détails compétition -->
+    <div id="competition-details" class="competition-details-section">
+        <div id="competition-name">Nom de la compétition</div>
 
-  <!-- Section détails compétition -->
-  <div id="competition-details" class="competition-details-section">
+        <div class="competition-header">
+            <div class="competition-info">
+                <span class="info-label">État:</span>
+                <select id="competition-etat">
+                    <option value="inscription">Inscription</option>
+                    <option value="votation">Votation</option>
+                    <option value="termine">Terminé</option>
+                </select>
+            </div>
+            <div class="competition-info">
+                <span class="info-label">Catégorie:</span>
+                <select id="competition-category">
+                    <option value="homme">Homme</option>
+                    <option value="femme">Femme</option>
+                    <option value="sport">Sport</option>
+                    <option value="luxe">Luxe</option>
+                </select>
+            </div>
+        </div>
 
-    <div id="competition-name">Nom de la compétition</div>
+        <div class="participants-title">Participants</div>
+        <div class="participants-list"></div>
 
-    <div class="competition-header">
-      <div class="competition-info">
-        <span class="info-label">État:</span>
-        <select id="competition-etat">
-          <option value="inscription">Inscription</option>
-          <option value="votation">Votation</option>
-          <option value="termine">Terminé</option>
-        </select>
-      </div>
-      <div class="competition-info">
-        <span class="info-label">Catégorie:</span>
-        <select id="competition-category">
-          <option value="homme">Homme</option>
-          <option value="femme">Femme</option>
-          <option value="sport">Sport</option>
-          <option value="luxe">Luxe</option>
-        </select>
-      </div>
-    </div>
-    
-    <div class="participants-title">Participants</div>
-    <div class="participants-list">
-    </div>
-
-    <button type="button" id="btnSupprimerCompetition">Annuler la compétition</button>
-  </div>
-
-  <!-- Nouvelle section détails participant -->
-  <div id="participant-details" class="participant-details-section">
-  <div id="participant-title">Participant</div>
-    <div class="participant-header">
-      <div class="participant-info">
-        <span class="info-label">Nom:</span>
-        <span id="participant-name">...</span>
-      </div>
-      <div class="participant-info">
-        <span class="info-label">Votes:</span>
-        <span id="participant-votes">...</span>
-      </div>
-    </div>
-    
-    <div class="voters-title">Votes</div>
-    <div class="voters-list">
+        <button type="button" id="btnSupprimerCompetition">
+            Annuler la compétition
+        </button>
     </div>
 
-    <button type="button" id="btnDesinscrire">Désinscrire le participant</button>
+    <!-- Nouvelle section détails participant -->
+    <div id="participant-details" class="participant-details-section">
+        <div id="participant-title">Participant</div>
+        <div class="participant-header">
+            <div class="participant-info">
+                <span class="info-label">Nom:</span>
+                <span id="participant-name">...</span>
+            </div>
+            <div class="participant-info">
+                <span class="info-label">Votes:</span>
+                <span id="participant-votes">...</span>
+            </div>
+        </div>
 
-  </div>
-</body>
-</html>
+        <div class="voters-title">Votes</div>
+        <div class="voters-list"></div>
 
-
-
+        <button type="button" id="btnDesinscrire">
+            Désinscrire le participant
+        </button>
+    </div>
+</div>
